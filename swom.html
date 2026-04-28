@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📕 毛选名言 · 随机卡片</title>
+    <style>
+        :root {
+            --bg-from: #f9f6f0;
+            --bg-via: #f5f1ea;
+            --bg-to: #f0ebe0;
+            --card-bg: #ffffff;
+            --card-shadow-1: 0 2px 16px rgba(60, 40, 20, 0.05);
+            --card-shadow-2: 0 8px 40px rgba(60, 40, 20, 0.07);
+            --card-shadow-3: 0 24px 72px rgba(60, 40, 20, 0.05);
+            --text-title: #2c2416;
+            --text-sub: #6b5e4f;
+            --text-counter: #b8a999;
+            --divider: #e8dfd2;
+            --btn-bg: #8b1a1a;
+            --btn-bg-hover: #a32222;
+            --btn-bg-active: #6e1414;
+            --btn-text: #fdf8f0;
+            --btn-shadow: 0 6px 24px rgba(139, 26, 26, 0.28);
+            --btn-shadow-hover: 0 10px 36px rgba(139, 26, 26, 0.42);
+            --btn-shadow-active: 0 3px 12px rgba(139, 26, 26, 0.32);
+            --accent-dot: #c44d34;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            min-height: 100dvh;
+            background: linear-gradient(160deg, var(--bg-from) 0%, var(--bg-via) 40%, var(--bg-to) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(80px);
+            opacity: 0.35;
+        }
+        .bg-orb--top {
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, #e8d0c0 0%, transparent 70%);
+            top: -180px;
+            right: -120px;
+        }
+        .bg-orb--bottom {
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle, #dfcbb8 0%, transparent 70%);
+            bottom: -140px;
+            left: -100px;
+        }
+        .bg-orb--mid {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #ede0d3 0%, transparent 70%);
+            top: 40%;
+            left: 55%;
+            opacity: 0.25;
+        }
+
+        .star-decor {
+            position: fixed;
+            top: clamp(18px, 3.5vh, 32px);
+            left: clamp(24px, 5vw, 48px);
+            z-index: 10;
+            font-size: 1.3rem;
+            opacity: 0.45;
+            pointer-events: none;
+            animation: starPulse 4s ease-in-out infinite;
+            letter-spacing: 0.15em;
+            color: #c44d34;
+        }
+        @keyframes starPulse {
+            0%,
+            100% {
+                opacity: 0.35;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.65;
+                transform: scale(1.15);
+            }
+        }
+
+        /* 封面 */
+        .intro-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+            opacity: 1;
+            visibility: visible;
+            cursor: pointer;
+            pointer-events: all;
+            background: linear-gradient(160deg, #f9f6f0 0%, #f5f1ea 40%, #f0ebe0 100%);
+        }
+        .intro-screen.fade-out {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .intro-card {
+            background: var(--card-bg);
+            border-radius: 36px;
+            padding: 48px 40px 60px;
+            max-width: 600px;
+            width: 88vw;
+            box-shadow: 0 2px 16px rgba(60, 40, 20, 0.06),
+                0 8px 40px rgba(60, 40, 20, 0.08),
+                0 24px 72px rgba(60, 40, 20, 0.06);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            animation: cardEntry 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+            border-left: 4px solid rgba(196, 77, 52, 0.45);
+        }
+
+        .intro-emoji {
+            font-size: clamp(4rem, 10vw, 6rem);
+            display: block;
+            animation: emojiFloat 3s ease-in-out infinite;
+        }
+        .intro-title {
+            font-family: 'Songti SC', 'STSong', 'Noto Serif SC', serif;
+            font-size: clamp(1.8rem, 4.5vw, 2.6rem);
+            font-weight: 700;
+            color: var(--text-title);
+            letter-spacing: 0.05em;
+        }
+        .intro-divider {
+            width: 40px;
+            height: 3px;
+            border-radius: 2px;
+            background: var(--accent-dot);
+            opacity: 0.6;
+        }
+        .intro-subtitle {
+            font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+            color: var(--text-sub);
+            line-height: 1.7;
+            opacity: 0.8;
+            max-width: 400px;
+        }
+        .intro-hint {
+            margin-top: 28px;
+            font-size: 0.9rem;
+            color: var(--text-counter);
+            letter-spacing: 0.04em;
+            animation: hintBlink 2.2s ease-in-out infinite;
+        }
+
+        @keyframes hintBlink {
+            0%,
+            100% {
+                opacity: 0.45;
+            }
+            50% {
+                opacity: 0.9;
+            }
+        }
+        @keyframes cardEntry {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        @keyframes emojiFloat {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-4px);
+            }
+        }
+
+        /* 主界面 */
+        .main-app {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            transition: opacity 0.6s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .main-app.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .card {
+            position: relative;
+            width: 92vw;
+            max-width: 700px;
+            height: 75vh;
+            height: 75dvh;
+            min-height: 420px;
+            max-height: 650px;
+            background: var(--card-bg);
+            border-radius: 32px;
+            box-shadow: var(--card-shadow-1), var(--card-shadow-2), var(--card-shadow-3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 36px 100px;
+            transition: box-shadow 0.5s ease, transform 0.5s ease;
+            animation: cardEntry 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+            border-left: 4px solid transparent;
+        }
+        .card.glow {
+            border-left-color: rgba(196, 77, 52, 0.5);
+            box-shadow:
+                0 2px 16px rgba(60, 40, 20, 0.06),
+                0 8px 40px rgba(60, 40, 20, 0.09),
+                0 24px 72px rgba(60, 40, 20, 0.07),
+                0 0 0 1px rgba(196, 77, 52, 0.12),
+                0 0 80px rgba(196, 77, 52, 0.1);
+        }
+
+        .card__content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 0;
+            transition: opacity 0.12s ease, transform 0.12s ease;
+            opacity: 1;
+            transform: scale(1);
+            width: 100%;
+        }
+        .card__content.hiding {
+            opacity: 0;
+            transform: scale(0.94);
+            transition: opacity 0.08s ease, transform 0.08s ease;
+        }
+
+        .card__emoji {
+            font-size: clamp(3rem, 7vw, 5rem);
+            line-height: 1;
+            margin-bottom: clamp(16px, 3vh, 28px);
+            display: block;
+            animation: emojiFloat 3s ease-in-out infinite;
+        }
+        .card__title {
+            font-family: 'Songti SC', 'STSong', 'Noto Serif SC', 'SimSun', 'KaiTi', 'STKaiti', serif;
+            font-size: clamp(1.5rem, 3.8vw, 2.5rem);
+            font-weight: 700;
+            color: var(--text-title);
+            line-height: 1.35;
+            letter-spacing: 0.05em;
+            max-width: 100%;
+            word-break: keep-all;
+            overflow-wrap: break-word;
+            margin-bottom: clamp(14px, 2.5vh, 22px);
+        }
+        .card__divider {
+            width: 36px;
+            height: 3px;
+            border-radius: 2px;
+            background: var(--accent-dot);
+            opacity: 0.55;
+            margin-bottom: clamp(14px, 2.5vh, 22px);
+        }
+        .card__subtitle {
+            font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', system-ui, sans-serif;
+            font-size: clamp(0.88rem, 1.5vw, 1.05rem);
+            font-weight: 400;
+            color: var(--text-sub);
+            line-height: 1.7;
+            letter-spacing: 0.02em;
+            max-width: 440px;
+            opacity: 0.78;
+            white-space: pre-line;
+        }
+
+        .counter {
+            position: fixed;
+            top: clamp(24px, 5vh, 40px);
+            right: clamp(24px, 5vw, 48px);
+            z-index: 10;
+            font-family: 'SF Mono', 'JetBrains Mono', 'Menlo', 'Consolas', 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: var(--text-counter);
+            letter-spacing: 0.06em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .counter.active {
+            opacity: 1;
+        }
+        .counter__dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-dot);
+            opacity: 0.7;
+            animation: dotPulse 2s ease-in-out infinite;
+        }
+        @keyframes dotPulse {
+            0%,
+            100% {
+                opacity: 0.4;
+                transform: scale(0.8);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.3);
+            }
+        }
+
+        .btn-wrapper {
+            position: fixed;
+            bottom: clamp(28px, 5vh, 48px);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease 0.3s;
+        }
+        .btn-wrapper.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px 36px;
+            font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', system-ui, sans-serif;
+            font-size: 1.05rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            color: var(--btn-text);
+            background: var(--btn-bg);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: var(--btn-shadow);
+            transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+            animation: btnFloat 3.5s ease-in-out infinite;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            min-width: 180px;
+        }
+        @keyframes btnFloat {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            35% {
+                transform: translateY(-7px);
+            }
+            65% {
+                transform: translateY(-3px);
+            }
+        }
+        .btn:hover {
+            background: var(--btn-bg-hover);
+            box-shadow: var(--btn-shadow-hover);
+            transform: translateY(-2px);
+            animation-play-state: paused;
+        }
+        .btn:active {
+            background: var(--btn-bg-active);
+            box-shadow: var(--btn-shadow-active);
+            transform: translateY(1px) scale(0.97);
+            transition: all 0.1s ease;
+            animation-play-state: paused;
+        }
+        .btn:focus-visible {
+            outline: 3px solid rgba(196, 77, 52, 0.55);
+            outline-offset: 4px;
+        }
+        .btn__ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.22);
+            transform: scale(0);
+            animation: ripple 0.6s ease-out forwards;
+            pointer-events: none;
+        }
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        .btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+            animation-play-state: paused;
+            pointer-events: none;
+        }
+        .btn:disabled:hover {
+            background: var(--btn-bg);
+            box-shadow: var(--btn-shadow);
+            transform: none;
+        }
+        .btn__icon {
+            display: inline-block;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+        .btn:not(:disabled):hover .btn__icon {
+            transform: rotate(-15deg) scale(1.1);
+        }
+        .btn:disabled .btn__icon {
+            animation: spinIcon 0.6s linear infinite;
+        }
+        @keyframes spinIcon {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .intro-card {
+                padding: 32px 22px 48px;
+                border-radius: 28px;
+            }
+            .card {
+                width: 94vw;
+                height: 72dvh;
+                min-height: 360px;
+                border-radius: 24px;
+                padding: 32px 22px 90px;
+            }
+            .btn {
+                padding: 14px 28px;
+                font-size: 0.95rem;
+                min-width: 150px;
+                border-radius: 44px;
+            }
+            .bg-orb--top {
+                width: 250px;
+                height: 250px;
+                top: -120px;
+                right: -80px;
+            }
+            .bg-orb--bottom {
+                width: 200px;
+                height: 200px;
+                bottom: -100px;
+                left: -70px;
+            }
+            .bg-orb--mid {
+                width: 120px;
+                height: 120px;
+            }
+            .star-decor {
+                font-size: 1rem;
+                top: 14px;
+                left: 18px;
+            }
+        }
+        @media (min-width: 1200px) {
+            .card {
+                max-width: 750px;
+                height: 70dvh;
+                max-height: 680px;
+                border-radius: 36px;
+                padding: 48px 48px 110px;
+            }
+        }
+        @media (max-height: 500px) {
+            .intro-card {
+                padding: 20px 20px 32px;
+            }
+            .card {
+                height: 82dvh;
+                min-height: 300px;
+                padding: 20px 20px 80px;
+                border-radius: 20px;
+            }
+            .card__emoji {
+                font-size: 2.2rem;
+                margin-bottom: 8px;
+            }
+            .card__title {
+                font-size: 1.2rem;
+                margin-bottom: 6px;
+            }
+            .card__divider {
+                margin-bottom: 8px;
+                width: 24px;
+                height: 2px;
+            }
+            .card__subtitle {
+                font-size: 0.8rem;
+            }
+            .btn {
+                padding: 10px 22px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-orb bg-orb--top" aria-hidden="true"></div>
+    <div class="bg-orb bg-orb--bottom" aria-hidden="true"></div>
+    <div class="bg-orb bg-orb--mid" aria-hidden="true"></div>
+    <div class="star-decor" aria-hidden="true">★ 毛选名言</div>
+
+    <!-- 封面 -->
+    <div class="intro-screen" id="introScreen">
+        <div class="intro-card">
+            <span class="intro-emoji" aria-hidden="true">📕</span>
+            <h1 class="intro-title">毛泽东选集</h1>
+            <div class="intro-divider" aria-hidden="true"></div>
+            <p class="intro-subtitle">经典名言卡片集<br>汲取智慧，砥砺前行</p>
+            <p class="intro-hint">点击任意位置翻开书页</p>
+        </div>
+    </div>
+
+    <!-- 主界面 -->
+    <div class="main-app" id="mainApp">
+        <div class="counter" id="counter" aria-live="polite">
+            <span class="counter__dot" aria-hidden="true"></span>
+            <span>已抽取&nbsp;<strong id="counterNum">0</strong>&nbsp;次</span>
+        </div>
+
+        <main class="card" id="card" role="region" aria-label="毛选名言卡片展示区">
+            <div class="card__content" id="cardContent">
+                <span class="card__emoji" id="cardEmoji">📕</span>
+                <h1 class="card__title" id="cardTitle">点击下方按钮</h1>
+                <div class="card__divider" aria-hidden="true"></div>
+                <p class="card__subtitle" id="cardSubtitle">抽取一张毛选名言卡片</p>
+            </div>
+        </main>
+
+        <div class="btn-wrapper" id="btnWrapper">
+            <button class="btn" id="drawBtn" title="随机抽取一张毛选名言卡片" aria-label="随机抽取卡片">
+                <span class="btn__icon" aria-hidden="true">🎲</span>
+                <span id="btnText">随机抽取</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // 名言库
+            const cards = [
+                { emoji: '🔥', title: '星星之火，可以燎原', subtitle: '革命力量虽小，但发展壮大是必然趋势。\n——《星星之火，可以燎原》1930年' },
+                { emoji: '📋', title: '没有调查，就没有发言权', subtitle: '一切结论产生于调查情况的末尾，而不是先头。\n——《反对本本主义》1930年' },
+                { emoji: '🐯', title: '一切反动派都是纸老虎', subtitle: '看起来可怕，实际上经不起人民力量的一击。\n——1946年会见安娜·路易斯·斯特朗' },
+                { emoji: '🎯', title: '实事求是', subtitle: '从实际出发，探求事物的客观规律，不凭主观想象。\n——延安整风运动核心思想' },
+                { emoji: '🤝', title: '为人民服务', subtitle: '人固有一死，或重于泰山，或轻于鸿毛。\n——《为人民服务》1944年' },
+                { emoji: '🌾', title: '自己动手，丰衣足食', subtitle: '依靠自身力量克服困难，独立自主艰苦奋斗。\n——大生产运动时期号召' },
+                { emoji: '♟️', title: '战略上藐视敌人，战术上重视敌人', subtitle: '既要有必胜的信念，又要慎重对待每一个具体问题。\n——军事斗争重要策略思想' },
+                { emoji: '🔍', title: '虚心使人进步，骄傲使人落后', subtitle: '戒骄戒躁，永远保持谦逊学习的态度。\n——1956年中国共产党第八次全国代表大会开幕词' },
+                { emoji: '🏔️', title: '前途是光明的，道路是曲折的', subtitle: '坚定信念的同时，也要做好战胜困难的充分准备。\n——《论联合政府》1945年' },
+                { emoji: '⏰', title: '一万年太久，只争朝夕', subtitle: '抓住当下，分秒必争地去奋斗，不等不靠。\n——《满江红·和郭沫若同志》1963年' },
+                { emoji: '👥', title: '群众是真正的英雄', subtitle: '人民群众是历史的创造者，是真正的铜墙铁壁。\n——《〈农村调查〉的序言和跋》1941年' },
+                { emoji: '⚔️', title: '在战争中学习战争', subtitle: '实践是最好的老师，干就是学习，边干边学。\n——《中国革命战争的战略问题》1936年' }
+            ];
+
+            const introScreen = document.getElementById('introScreen');
+            const mainApp = document.getElementById('mainApp');
+            const cardContentEl = document.getElementById('cardContent');
+            const cardEmojiEl = document.getElementById('cardEmoji');
+            const cardTitleEl = document.getElementById('cardTitle');
+            const cardSubtitleEl = document.getElementById('cardSubtitle');
+            const drawBtn = document.getElementById('drawBtn');
+            const btnTextEl = document.getElementById('btnText');
+            const btnWrapper = document.getElementById('btnWrapper');
+            const counterEl = document.getElementById('counter');
+            const counterNumEl = document.getElementById('counterNum');
+            const cardEl = document.getElementById('card');
+
+            let isAnimating = false;
+            let drawCount = 0;
+            let currentCardIndex = 0;
+            let hasEntered = false;
+
+            function updateCardDOM(card) {
+                cardEmojiEl.textContent = card.emoji;
+                cardTitleEl.textContent = card.title;
+                cardSubtitleEl.textContent = card.subtitle;
+            }
+
+            function getRandomCardIndex() {
+                return Math.floor(Math.random() * cards.length);
+            }
+
+            function wait(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            function hideContent() {
+                return new Promise(resolve => {
+                    cardContentEl.classList.add('hiding');
+                    setTimeout(resolve, 80);
+                });
+            }
+
+            function showContent() {
+                return new Promise(resolve => {
+                    cardContentEl.classList.remove('hiding');
+                    setTimeout(resolve, 80);
+                });
+            }
+
+            function createRipple(event) {
+                const btn = event.currentTarget;
+                const rect = btn.getBoundingClientRect();
+                const ripple = document.createElement('span');
+                ripple.classList.add('btn__ripple');
+                const size = Math.max(rect.width, rect.height);
+                ripple.style.width = size + 'px';
+                ripple.style.height = size + 'px';
+                ripple.style.left = (event.clientX - rect.left - size / 2) + 'px';
+                ripple.style.top = (event.clientY - rect.top - size / 2) + 'px';
+                btn.appendChild(ripple);
+                ripple.addEventListener('animationend', () => ripple.remove());
+            }
+
+            function triggerCardGlow(duration = 700) {
+                cardEl.classList.add('glow');
+                setTimeout(() => cardEl.classList.remove('glow'), duration);
+            }
+
+            async function drawCard() {
+                if (isAnimating || !hasEntered) return;
+                isAnimating = true;
+
+                drawBtn.disabled = true;
+                btnTextEl.textContent = '抽取中...';
+                drawBtn.style.animationPlayState = 'paused';
+
+                const finalIndex = getRandomCardIndex();
+                let tempIndices = [];
+                const switchCount = 5;
+                for (let i = 0; i < switchCount; i++) {
+                    let idx;
+                    do {
+                        idx = getRandomCardIndex();
+                    } while (idx === currentCardIndex && cards.length > 1 && tempIndices.length === 0);
+                    if (i === 0 && idx === currentCardIndex && cards.length > 1) {
+                        idx = (currentCardIndex + 1) % cards.length;
+                    }
+                    tempIndices.push(idx);
+                }
+
+                const intervals = [70, 90, 120, 160, 200];
+                for (let i = 0; i < switchCount; i++) {
+                    await hideContent();
+                    updateCardDOM(cards[tempIndices[i]]);
+                    currentCardIndex = tempIndices[i];
+                    await showContent();
+                    if (i < switchCount - 1) {
+                        await wait(intervals[i]);
+                    }
+                }
+
+                await wait(180);
+                await hideContent();
+                updateCardDOM(cards[finalIndex]);
+                currentCardIndex = finalIndex;
+                await showContent();
+
+                triggerCardGlow(700);
+
+                drawCount++;
+                counterNumEl.textContent = drawCount;
+
+                drawBtn.disabled = false;
+                btnTextEl.textContent = '随机抽取';
+                drawBtn.style.animationPlayState = 'running';
+                isAnimating = false;
+            }
+
+            function enterMainApp() {
+                if (hasEntered) return;
+                hasEntered = true;
+
+                // 封面淡出，显示主界面
+                introScreen.classList.add('fade-out');
+                mainApp.classList.add('visible');
+                btnWrapper.classList.add('active');
+                counterEl.classList.add('active');
+
+                // 设置初始不可见内容，为抽取动画做准备
+                currentCardIndex = 0;
+                updateCardDOM(cards[0]);
+                cardContentEl.classList.add('hiding');
+
+                // 绑定按钮和键盘事件
+                drawBtn.addEventListener('click', (event) => {
+                    createRipple(event);
+                    drawCard();
+                });
+                document.addEventListener('keydown', (event) => {
+                    if (event.code === 'Space' || event.code === 'Enter') {
+                        if (document.activeElement === drawBtn) return;
+                        event.preventDefault();
+                        drawBtn.focus();
+                        drawCard();
+                    }
+                });
+
+                // 直接触发首次抽取，翻开即获得一张随机卡片
+                drawCard();
+            }
+
+            // 封面点击与键盘进入
+            introScreen.addEventListener('click', enterMainApp);
+            document.addEventListener('keydown', function openIntro(e) {
+                if (hasEntered) return;
+                if (e.code === 'F1' || e.code === 'F5' || e.ctrlKey || e.altKey) return;
+                e.preventDefault();
+                enterMainApp();
+            });
+
+            // 初始状态
+            mainApp.classList.remove('visible');
+            btnWrapper.classList.remove('active');
+            counterEl.classList.remove('active');
+        })();
+    </script>
+</body>
+</html>
