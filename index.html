@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📕 人生卡壳，翻翻名册 · 灵感卡片集</title>
+    <title>人生卡壳，翻翻名册 · 毛选名言卡片</title>
     <style>
         :root {
             --bg-from: #f9f6f0;
@@ -16,7 +16,7 @@
             --text-title: #2c2416;
             --text-sub: #6b5e4f;
             --text-counter: #b8a999;
-            --divider: #e8dfd2;
+            --accent-dot: #c44d34;
             --btn-bg: #8b1a1a;
             --btn-bg-hover: #a32222;
             --btn-bg-active: #6e1414;
@@ -24,7 +24,10 @@
             --btn-shadow: 0 6px 24px rgba(139, 26, 26, 0.28);
             --btn-shadow-hover: 0 10px 36px rgba(139, 26, 26, 0.42);
             --btn-shadow-active: 0 3px 12px rgba(139, 26, 26, 0.32);
-            --accent-dot: #c44d34;
+            /* 动态色调，初始默认 */
+            --theme-r: 196;
+            --theme-g: 77;
+            --theme-b: 52;
         }
 
         * {
@@ -46,6 +49,7 @@
             -webkit-tap-highlight-color: transparent;
             user-select: none;
             -webkit-user-select: none;
+            transition: background 0.6s ease;
         }
 
         .bg-orb {
@@ -55,25 +59,26 @@
             z-index: 0;
             filter: blur(80px);
             opacity: 0.35;
+            transition: background 0.6s ease;
         }
         .bg-orb--top {
             width: 420px;
             height: 420px;
-            background: radial-gradient(circle, #e8d0c0 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.25) 0%, transparent 70%);
             top: -180px;
             right: -120px;
         }
         .bg-orb--bottom {
             width: 320px;
             height: 320px;
-            background: radial-gradient(circle, #dfcbb8 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.2) 0%, transparent 70%);
             bottom: -140px;
             left: -100px;
         }
         .bg-orb--mid {
             width: 200px;
             height: 200px;
-            background: radial-gradient(circle, #ede0d3 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.15) 0%, transparent 70%);
             top: 40%;
             left: 55%;
             opacity: 0.25;
@@ -89,7 +94,8 @@
             pointer-events: none;
             animation: starPulse 4s ease-in-out infinite;
             letter-spacing: 0.15em;
-            color: #c44d34;
+            color: rgb(var(--theme-r), var(--theme-g), var(--theme-b));
+            transition: color 0.6s ease;
         }
         @keyframes starPulse {
             0%,
@@ -142,7 +148,6 @@
             animation: cardEntry 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
             border-left: 4px solid rgba(196, 77, 52, 0.45);
         }
-
         .intro-emoji {
             font-size: clamp(4rem, 10vw, 6rem);
             display: block;
@@ -176,7 +181,6 @@
             letter-spacing: 0.04em;
             animation: hintBlink 2.2s ease-in-out infinite;
         }
-
         @keyframes hintBlink {
             0%,
             100% {
@@ -244,18 +248,18 @@
             align-items: center;
             justify-content: center;
             padding: 40px 36px 100px;
-            transition: box-shadow 0.5s ease, transform 0.5s ease;
             animation: cardEntry 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
-            border-left: 4px solid transparent;
+            border-left: 4px solid rgb(var(--theme-r), var(--theme-g), var(--theme-b));
+            transition: border-left-color 0.6s ease, box-shadow 0.5s ease;
         }
         .card.glow {
-            border-left-color: rgba(196, 77, 52, 0.5);
+            border-left-color: rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.5);
             box-shadow:
-                0 2px 16px rgba(60, 40, 20, 0.06),
-                0 8px 40px rgba(60, 40, 20, 0.09),
-                0 24px 72px rgba(60, 40, 20, 0.07),
-                0 0 0 1px rgba(196, 77, 52, 0.12),
-                0 0 80px rgba(196, 77, 52, 0.1);
+                0 2px 16px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.06),
+                0 8px 40px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.09),
+                0 24px 72px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.07),
+                0 0 0 1px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.12),
+                0 0 80px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.1);
         }
 
         .card__content {
@@ -299,9 +303,10 @@
             width: 36px;
             height: 3px;
             border-radius: 2px;
-            background: var(--accent-dot);
+            background: rgb(var(--theme-r), var(--theme-g), var(--theme-b));
             opacity: 0.55;
             margin-bottom: clamp(14px, 2.5vh, 22px);
+            transition: background 0.6s ease;
         }
         .card__subtitle {
             font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', system-ui, sans-serif;
@@ -338,9 +343,10 @@
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background: var(--accent-dot);
+            background: rgb(var(--theme-r), var(--theme-g), var(--theme-b));
             opacity: 0.7;
             animation: dotPulse 2s ease-in-out infinite;
+            transition: background 0.6s ease;
         }
         @keyframes dotPulse {
             0%,
@@ -384,12 +390,12 @@
             font-weight: 500;
             letter-spacing: 0.04em;
             color: var(--btn-text);
-            background: var(--btn-bg);
+            background: rgb(var(--theme-r), var(--theme-g), var(--theme-b));
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: var(--btn-shadow);
-            transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            box-shadow: 0 6px 24px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.3);
+            transition: all 0.35s cubic-bezier(0.25, 0.1, 0.25, 1), background 0.6s ease;
             position: relative;
             overflow: hidden;
             white-space: nowrap;
@@ -411,20 +417,20 @@
             }
         }
         .btn:hover {
-            background: var(--btn-bg-hover);
-            box-shadow: var(--btn-shadow-hover);
+            background: rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.85);
+            box-shadow: 0 10px 36px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.45);
             transform: translateY(-2px);
             animation-play-state: paused;
         }
         .btn:active {
-            background: var(--btn-bg-active);
-            box-shadow: var(--btn-shadow-active);
+            background: rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.7);
+            box-shadow: 0 3px 12px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.35);
             transform: translateY(1px) scale(0.97);
             transition: all 0.1s ease;
             animation-play-state: paused;
         }
         .btn:focus-visible {
-            outline: 3px solid rgba(196, 77, 52, 0.55);
+            outline: 3px solid rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.6);
             outline-offset: 4px;
         }
         .btn__ripple {
@@ -448,8 +454,8 @@
             pointer-events: none;
         }
         .btn:disabled:hover {
-            background: var(--btn-bg);
-            box-shadow: var(--btn-shadow);
+            background: rgb(var(--theme-r), var(--theme-g), var(--theme-b));
+            box-shadow: 0 6px 24px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.3);
             transform: none;
         }
         .btn__icon {
@@ -555,15 +561,15 @@
     <div class="bg-orb bg-orb--top" aria-hidden="true"></div>
     <div class="bg-orb bg-orb--bottom" aria-hidden="true"></div>
     <div class="bg-orb bg-orb--mid" aria-hidden="true"></div>
-    <div class="star-decor" aria-hidden="true">★ 毛选名言</div>
+    <div class="star-decor" aria-hidden="true">★ 人生卡壳，翻翻名册</div>
 
     <!-- 封面 -->
     <div class="intro-screen" id="introScreen">
         <div class="intro-card">
             <span class="intro-emoji" aria-hidden="true">📕</span>
-            <h1 class="intro-title">毛泽东选集</h1>
+            <h1 class="intro-title">人生卡壳，翻翻名册</h1>
             <div class="intro-divider" aria-hidden="true"></div>
-            <p class="intro-subtitle">人生卡壳，翻翻名册<br>灵感卡片集<br>汲取智慧，砥砺前行</p>
+            <p class="intro-subtitle">毛泽东选集 · 经典名言卡片集<br>汲取智慧，砥砺前行</p>
             <p class="intro-hint">点击任意位置翻开书页</p>
         </div>
     </div>
@@ -594,7 +600,22 @@
 
     <script>
         (function() {
-            // 名言库
+            // 图标与主题色调映射
+            const emojiColorMap = {
+                '🔥': { r: 200, g: 60, b: 30 },   // 火焰红
+                '📋': { r: 80, g: 110, b: 140 },  // 沉稳蓝灰
+                '🐯': { r: 210, g: 140, b: 50 },  // 虎纹金
+                '🎯': { r: 180, g: 40, b: 40 },   // 靶心红
+                '🤝': { r: 60, g: 130, b: 100 },  // 信任绿
+                '🌾': { r: 160, g: 140, b: 70 },  // 麦穗金
+                '♟️': { r: 70, g: 70, b: 80 },     // 战略深灰
+                '🔍': { r: 50, g: 90, b: 140 },   // 探索蓝
+                '🏔️': { r: 100, g: 130, b: 150 }, // 山峰青
+                '⏰': { r: 180, g: 120, b: 60 },  // 光阴铜
+                '👥': { r: 120, g: 80, b: 130 },  // 群众紫
+                '⚔️': { r: 150, g: 60, b: 50 }    // 刀锋红褐
+            };
+
             const cards = [
                 { emoji: '🔥', title: '星星之火，可以燎原', subtitle: '革命力量虽小，但发展壮大是必然趋势。\n——《星星之火，可以燎原》1930年' },
                 { emoji: '📋', title: '没有调查，就没有发言权', subtitle: '一切结论产生于调查情况的末尾，而不是先头。\n——《反对本本主义》1930年' },
@@ -610,6 +631,7 @@
                 { emoji: '⚔️', title: '在战争中学习战争', subtitle: '实践是最好的老师，干就是学习，边干边学。\n——《中国革命战争的战略问题》1936年' }
             ];
 
+            const root = document.documentElement;
             const introScreen = document.getElementById('introScreen');
             const mainApp = document.getElementById('mainApp');
             const cardContentEl = document.getElementById('cardContent');
@@ -628,10 +650,20 @@
             let currentCardIndex = 0;
             let hasEntered = false;
 
+            // 根据图标更新CSS变量中的主题色
+            function updateThemeByEmoji(emoji) {
+                const color = emojiColorMap[emoji] || { r: 196, g: 77, b: 52 };
+                root.style.setProperty('--theme-r', color.r);
+                root.style.setProperty('--theme-g', color.g);
+                root.style.setProperty('--theme-b', color.b);
+            }
+
             function updateCardDOM(card) {
                 cardEmojiEl.textContent = card.emoji;
                 cardTitleEl.textContent = card.title;
                 cardSubtitleEl.textContent = card.subtitle;
+                // 动态切换背景色调
+                updateThemeByEmoji(card.emoji);
             }
 
             function getRandomCardIndex() {
@@ -729,18 +761,15 @@
                 if (hasEntered) return;
                 hasEntered = true;
 
-                // 封面淡出，显示主界面
                 introScreen.classList.add('fade-out');
                 mainApp.classList.add('visible');
                 btnWrapper.classList.add('active');
                 counterEl.classList.add('active');
 
-                // 设置初始不可见内容，为抽取动画做准备
                 currentCardIndex = 0;
                 updateCardDOM(cards[0]);
                 cardContentEl.classList.add('hiding');
 
-                // 绑定按钮和键盘事件
                 drawBtn.addEventListener('click', (event) => {
                     createRipple(event);
                     drawCard();
@@ -754,11 +783,9 @@
                     }
                 });
 
-                // 直接触发首次抽取，翻开即获得一张随机卡片
                 drawCard();
             }
 
-            // 封面点击与键盘进入
             introScreen.addEventListener('click', enterMainApp);
             document.addEventListener('keydown', function openIntro(e) {
                 if (hasEntered) return;
@@ -767,7 +794,6 @@
                 enterMainApp();
             });
 
-            // 初始状态
             mainApp.classList.remove('visible');
             btnWrapper.classList.remove('active');
             counterEl.classList.remove('active');
