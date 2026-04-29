@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>人生卡壳，翻翻名册 · 毛泽东选集名言卡片</title>
     <style>
         :root {
@@ -77,57 +77,168 @@
             opacity: 0.28;
         }
 
-        /* 左上角书名装饰 */
+        /* 左上角装饰区 - 二维码 + 标题融合 */
         .book-title-decor {
             position: fixed;
             top: clamp(20px, 4vh, 36px);
             left: clamp(24px, 5vw, 48px);
             z-index: 10;
-            pointer-events: none;
+            pointer-events: auto;
             display: flex;
             align-items: center;
-            gap: 10px;
-            opacity: 0.85;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 8px 18px 8px 12px;
+            border-radius: 60px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
         }
-        .book-title-decor .star-icon {
-            font-size: 1.6rem;
-            color: rgb(var(--theme-r), var(--theme-g), var(--theme-b));
-            transition: color 0.8s ease;
-            animation: starPulse 4s ease-in-out infinite;
-            filter: drop-shadow(0 2px 6px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.3));
+        .book-title-decor:hover {
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
         }
-        @keyframes starPulse {
-            0%,
-            100% {
-                opacity: 0.6;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.2);
-            }
+
+        /* 迷你二维码容器 */
+        .qr-mini {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            border-radius: 14px;
+            background: white;
+            padding: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        .qr-mini:hover {
+            transform: scale(1.02);
+        }
+        .qr-mini-img {
+            width: 48px;
+            height: 48px;
+            display: block;
+            border-radius: 10px;
+            background: white;
+        }
+        /* 右侧文字区域 */
+        .title-group {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.3;
         }
         .book-title-text {
             font-family: 'Songti SC', 'STSong', 'Noto Serif SC', 'KaiTi', 'STKaiti', serif;
-            font-size: clamp(1rem, 1.8vw, 1.3rem);
+            font-size: clamp(0.9rem, 1.8vw, 1.25rem);
             font-weight: 700;
             color: rgb(var(--theme-r), var(--theme-g), var(--theme-b));
             letter-spacing: 0.06em;
             transition: color 0.8s ease;
-            text-shadow: 0 1px 3px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.15);
-            line-height: 1.3;
+            text-shadow: 0 1px 2px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.1);
+            white-space: nowrap;
         }
         .book-title-sub {
             font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
             font-size: 0.7rem;
             font-weight: 500;
-            color: rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.7);
+            color: rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.75);
             letter-spacing: 0.08em;
-            margin-top: 1px;
+            margin-top: 2px;
             transition: color 0.8s ease;
+            white-space: nowrap;
         }
 
-        /* 封面 */
+        /* 计数器样式优化：视觉上与左侧对称 */
+        .counter {
+            position: fixed;
+            top: clamp(24px, 5vh, 40px);
+            right: clamp(24px, 5vw, 48px);
+            z-index: 10;
+            font-family: 'SF Mono', 'JetBrains Mono', 'Menlo', 'Consolas', 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: var(--text-counter);
+            letter-spacing: 0.06em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 8px 16px;
+            border-radius: 20px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .counter.active {
+            opacity: 1;
+        }
+        .counter__dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgb(var(--theme-r), var(--theme-g), var(--theme-b));
+            opacity: 0.8;
+            animation: dotPulse 2s ease-in-out infinite;
+            transition: background 0.8s ease;
+        }
+        @keyframes dotPulse {
+            0%, 100% {
+                opacity: 0.4;
+                transform: scale(0.7);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.4);
+            }
+        }
+
+        /* 响应式调整：让左右留白视觉对称 */
+        @media (max-width: 560px) {
+            .book-title-decor {
+                top: 12px;
+                left: 12px;
+                padding: 5px 12px 5px 8px;
+                gap: 8px;
+            }
+            .qr-mini-img {
+                width: 38px;
+                height: 38px;
+            }
+            .book-title-text {
+                font-size: 0.8rem;
+            }
+            .book-title-sub {
+                font-size: 0.6rem;
+            }
+            /* 计数器右侧距离微调，与左侧装饰边距视觉平衡 */
+            .counter {
+                right: 16px;
+                top: 16px;
+                padding: 6px 12px;
+                font-size: 0.7rem;
+            }
+        }
+        @media (max-width: 420px) {
+            .qr-mini-img {
+                width: 34px;
+                height: 34px;
+            }
+            .book-title-text {
+                font-size: 0.7rem;
+            }
+            .book-title-sub {
+                font-size: 0.55rem;
+            }
+            .counter {
+                right: 12px;
+                top: 12px;
+                padding: 5px 10px;
+            }
+        }
+
         .intro-screen {
             position: fixed;
             inset: 0;
@@ -217,8 +328,7 @@
             border-radius: 30px;
         }
         @keyframes hintBlink {
-            0%,
-            100% {
+            0%, 100% {
                 opacity: 0.5;
                 transform: translateY(0);
             }
@@ -238,8 +348,7 @@
             }
         }
         @keyframes emojiFloat {
-            0%,
-            100% {
+            0%, 100% {
                 transform: translateY(0);
             }
             30% {
@@ -250,7 +359,6 @@
             }
         }
 
-        /* 主界面 */
         .main-app {
             position: relative;
             z-index: 1;
@@ -269,7 +377,6 @@
             pointer-events: all;
         }
 
-        /* 卡片 */
         .card {
             position: relative;
             width: 92vw;
@@ -334,7 +441,6 @@
             pointer-events: none;
         }
 
-        /* 可点击复制区域 */
         .card__copy-area {
             cursor: pointer;
             position: relative;
@@ -388,7 +494,6 @@
             pointer-events: none;
         }
 
-        /* 复制成功提示 */
         .copy-toast {
             position: fixed;
             top: 50%;
@@ -420,7 +525,6 @@
             font-size: 1.1rem;
         }
 
-        /* 卡片内的书名标识 */
         .card__book-badge {
             position: absolute;
             top: clamp(16px, 3vh, 24px);
@@ -439,51 +543,6 @@
             pointer-events: none;
             text-align: right;
             line-height: 1.4;
-        }
-
-        .counter {
-            position: fixed;
-            top: clamp(24px, 5vh, 40px);
-            right: clamp(24px, 5vw, 48px);
-            z-index: 10;
-            font-family: 'SF Mono', 'JetBrains Mono', 'Menlo', 'Consolas', 'Courier New', monospace;
-            font-size: 0.8rem;
-            color: var(--text-counter);
-            letter-spacing: 0.06em;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            background: rgba(255, 255, 255, 0.7);
-            padding: 8px 16px;
-            border-radius: 20px;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-        .counter.active {
-            opacity: 1;
-        }
-        .counter__dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: rgb(var(--theme-r), var(--theme-g), var(--theme-b));
-            opacity: 0.8;
-            animation: dotPulse 2s ease-in-out infinite;
-            transition: background 0.8s ease;
-        }
-        @keyframes dotPulse {
-            0%,
-            100% {
-                opacity: 0.4;
-                transform: scale(0.7);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.4);
-            }
         }
 
         .btn-wrapper {
@@ -531,8 +590,7 @@
             min-width: 190px;
         }
         @keyframes btnFloat {
-            0%,
-            100% {
+            0%, 100% {
                 transform: translateY(0);
             }
             35% {
@@ -579,11 +637,6 @@
             animation-play-state: paused;
             pointer-events: none;
         }
-        .btn:disabled:hover {
-            background: rgb(var(--theme-r), var(--theme-g), var(--theme-b));
-            box-shadow: 0 8px 32px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.35);
-            transform: none;
-        }
         .btn__icon {
             display: inline-block;
             font-size: 1.3rem;
@@ -592,115 +645,28 @@
         .btn:not(:disabled):hover .btn__icon {
             transform: rotate(-15deg) scale(1.15);
         }
-        .btn:disabled .btn__icon {
-            animation: spinIcon 0.6s linear infinite;
-        }
-        @keyframes spinIcon {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
         @media (max-width: 480px) {
-            .intro-card {
-                padding: 32px 22px 48px;
-                border-radius: 28px;
-            }
-            .card {
-                width: 94vw;
-                height: 72dvh;
-                min-height: 360px;
-                border-radius: 24px;
-                padding: 36px 22px 90px;
-            }
-            .btn {
-                padding: 15px 30px;
-                font-size: 1rem;
-                min-width: 160px;
-                border-radius: 44px;
-            }
-            .bg-orb--top {
-                width: 280px;
-                height: 280px;
-                top: -130px;
-                right: -90px;
-            }
-            .bg-orb--bottom {
-                width: 220px;
-                height: 220px;
-                bottom: -110px;
-                left: -80px;
-            }
-            .bg-orb--mid {
-                width: 130px;
-                height: 130px;
-            }
-            .book-title-decor {
-                top: 14px;
-                left: 16px;
-                gap: 6px;
-            }
-            .book-title-text {
-                font-size: 0.85rem;
-            }
-            .book-title-sub {
-                font-size: 0.6rem;
-            }
-            .card__book-badge {
-                font-size: 0.65rem;
-                padding: 4px 10px;
-                top: 10px;
-                right: 10px;
-            }
-            .copy-toast {
-                font-size: 0.85rem;
-                padding: 12px 22px;
-            }
+            .intro-card { padding: 32px 22px 48px; border-radius: 28px; }
+            .card { width: 94vw; height: 72dvh; min-height: 360px; border-radius: 24px; padding: 36px 22px 90px; }
+            .btn { padding: 15px 30px; font-size: 1rem; min-width: 160px; }
+            .bg-orb--top { width: 280px; height: 280px; top: -130px; right: -90px; }
+            .bg-orb--bottom { width: 220px; height: 220px; bottom: -110px; left: -80px; }
+            .bg-orb--mid { width: 130px; height: 130px; }
+            .card__book-badge { font-size: 0.65rem; padding: 4px 10px; top: 10px; right: 10px; }
+            .copy-toast { font-size: 0.85rem; padding: 12px 22px; }
         }
         @media (min-width: 1200px) {
-            .card {
-                max-width: 750px;
-                height: 70dvh;
-                max-height: 680px;
-                border-radius: 36px;
-                padding: 52px 52px 120px;
-            }
+            .card { max-width: 750px; height: 70dvh; max-height: 680px; border-radius: 36px; padding: 52px 52px 120px; }
         }
         @media (max-height: 500px) {
-            .intro-card {
-                padding: 20px 20px 32px;
-            }
-            .card {
-                height: 82dvh;
-                min-height: 300px;
-                padding: 16px 20px 75px;
-                border-radius: 20px;
-            }
-            .card__emoji {
-                font-size: 2.4rem;
-                margin-bottom: 8px;
-            }
-            .card__title {
-                font-size: 1.2rem;
-                margin-bottom: 6px;
-            }
-            .card__divider {
-                margin-bottom: 8px;
-                width: 28px;
-                height: 3px;
-            }
-            .card__subtitle {
-                font-size: 0.8rem;
-            }
-            .btn {
-                padding: 10px 24px;
-                font-size: 0.9rem;
-            }
-            .card__book-badge {
-                font-size: 0.6rem;
-                top: 8px;
-                right: 8px;
-            }
+            .intro-card { padding: 20px 20px 32px; }
+            .card { height: 82dvh; min-height: 300px; padding: 16px 20px 75px; border-radius: 20px; }
+            .card__emoji { font-size: 2.4rem; margin-bottom: 8px; }
+            .card__title { font-size: 1.2rem; margin-bottom: 6px; }
+            .card__divider { margin-bottom: 8px; width: 28px; height: 3px; }
+            .card__subtitle { font-size: 0.8rem; }
+            .btn { padding: 10px 24px; font-size: 0.9rem; }
+            .card__book-badge { font-size: 0.6rem; top: 8px; right: 8px; }
         }
     </style>
 </head>
@@ -709,33 +675,32 @@
     <div class="bg-orb bg-orb--bottom" aria-hidden="true"></div>
     <div class="bg-orb bg-orb--mid" aria-hidden="true"></div>
 
-    <!-- 左上角书名标识 -->
-    <div class="book-title-decor" aria-hidden="true">
-        <span class="star-icon">★</span>
-        <div>
-            <div class="book-title-text">人生卡壳，翻翻名册</div>
-            <div class="book-title-sub">毛泽东选集</div>
+    <!-- 左上角融合区域：二维码 + 标题（替换原五角星） -->
+    <div class="book-title-decor" aria-hidden="false">
+        <div class="qr-mini" id="qrMiniContainer" title="扫码访问 毛选名言卡片集">
+            <img class="qr-mini-img" id="qrMiniImg" alt="扫码打开网页" />
+        </div>
+        <div class="title-group">
+            <div class="book-title-text"></div>
+            <div class="book-title-sub"></div>
         </div>
     </div>
 
-    <!-- 复制成功提示 -->
     <div class="copy-toast" id="copyToast">
         <span class="toast-icon">📋</span>已复制到剪贴板
     </div>
 
-    <!-- 封面 -->
     <div class="intro-screen" id="introScreen">
         <div class="intro-card">
             <span class="intro-emoji" aria-hidden="true">📕</span>
-            <div class="intro-book-name">毛泽东选集</div>
-            <h1 class="intro-title">人生卡壳，翻翻名册</h1>
+            <div class="intro-book-name"></div>
+            <h1 class="intro-title"></h1>
             <div class="intro-divider" aria-hidden="true"></div>
-            <p class="intro-subtitle">经典名言卡片集<br>汲取智慧，砥砺前行</p>
+            <p class="intro-subtitle"></p>
             <p class="intro-hint">✨ 点击任意位置翻开书页</p>
         </div>
     </div>
 
-    <!-- 主界面 -->
     <div class="main-app" id="mainApp">
         <div class="counter" id="counter" aria-live="polite">
             <span class="counter__dot" aria-hidden="true"></span>
@@ -743,10 +708,9 @@
         </div>
 
         <main class="card" id="card" role="region" aria-label="毛选名言卡片展示区">
-            <div class="card__book-badge">经典名言卡片集<br>汲取智慧，砥砺前行</div>
+            <div class="card__book-badge"></div>
             <div class="card__content" id="cardContent">
                 <span class="card__emoji" id="cardEmoji">📕</span>
-                <!-- 可点击复制区域 -->
                 <div class="card__copy-area" id="cardCopyArea" title="点击复制名言">
                     <h1 class="card__title" id="cardTitle">点击下方按钮</h1>
                     <div class="card__divider" aria-hidden="true"></div>
@@ -765,6 +729,13 @@
 
     <script>
         (function() {
+            // ================= 全局配置常量（方便统一修改） =================
+            const siteConfig = {
+                mainTitle: "人生卡壳，翻翻名册",
+                subTitle: "毛泽东选集",
+                collectionDesc: "经典名言卡片集<br>汲取智慧，砥砺前行",
+                qrUrl: window.location.href || "https://maoxuan-card.example.com"
+            };
             const emojiColorMap = {
                 '🔥': { theme: { r: 210, g: 55, b: 30 }, cardBg: { r: 255, g: 242, b: 237 } },
                 '📋': { theme: { r: 70, g: 105, b: 140 }, cardBg: { r: 238, g: 245, b: 252 } },
@@ -934,6 +905,39 @@
                 { emoji: '👁️', title: '没有正确的政治观点，就等于没有灵魂', subtitle: '思想政治工作是一切工作的生命线。\n——《关于正确处理人民内部矛盾的问题》1957年' }
             ];
 
+            function applyGlobalTexts() {
+                document.querySelector('.book-title-text').textContent = siteConfig.mainTitle;
+                document.querySelector('.book-title-sub').textContent = siteConfig.subTitle;
+                document.querySelector('.intro-book-name').textContent = siteConfig.subTitle;
+                document.querySelector('.intro-title').textContent = siteConfig.mainTitle;
+                document.querySelector('.intro-subtitle').innerHTML = siteConfig.collectionDesc;
+                document.querySelector('.card__book-badge').innerHTML = siteConfig.collectionDesc;
+                document.title = `${siteConfig.mainTitle} · ${siteConfig.subTitle}名言卡片`;
+            }
+            applyGlobalTexts();
+
+            // 生成左上角二维码
+            const qrImg = document.getElementById('qrMiniImg');
+            function initMiniQR() {
+                const url = siteConfig.qrUrl || window.location.href;
+                const encoded = encodeURIComponent(url);
+                qrImg.src = `https://quickchart.io/qr?text=${encoded}&size=180&margin=2&ecLevel=H`;
+                qrImg.alt = `扫码访问${siteConfig.mainTitle}`;
+                qrImg.onerror = () => {
+                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encoded}`;
+                };
+            }
+            initMiniQR();
+
+            const qrContainer = document.getElementById('qrMiniContainer');
+            if (qrContainer) {
+                qrContainer.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    window.open(siteConfig.qrUrl, '_blank');
+                });
+            }
+
+            // 核心交互逻辑
             const root = document.documentElement;
             const introScreen = document.getElementById('introScreen');
             const mainApp = document.getElementById('mainApp');
@@ -957,10 +961,7 @@
             let toastTimer = null;
 
             function updateThemeByEmoji(emoji) {
-                const colorConfig = emojiColorMap[emoji] || {
-                    theme: { r: 180, g: 35, b: 35 },
-                    cardBg: { r: 255, g: 240, b: 238 }
-                };
+                const colorConfig = emojiColorMap[emoji] || { theme: { r: 180, g: 35, b: 35 }, cardBg: { r: 255, g: 240, b: 238 } };
                 const t = colorConfig.theme;
                 const bg = colorConfig.cardBg;
                 root.style.setProperty('--theme-r', t.r);
@@ -979,27 +980,10 @@
                 updateThemeByEmoji(card.emoji);
             }
 
-            function getRandomCardIndex() {
-                return Math.floor(Math.random() * cards.length);
-            }
-
-            function wait(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
-            }
-
-            function hideContent() {
-                return new Promise(resolve => {
-                    cardContentEl.classList.add('hiding');
-                    setTimeout(resolve, 80);
-                });
-            }
-
-            function showContent() {
-                return new Promise(resolve => {
-                    cardContentEl.classList.remove('hiding');
-                    setTimeout(resolve, 80);
-                });
-            }
+            function getRandomCardIndex() { return Math.floor(Math.random() * cards.length); }
+            function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+            function hideContent() { return new Promise(resolve => { cardContentEl.classList.add('hiding'); setTimeout(resolve, 80); }); }
+            function showContent() { return new Promise(resolve => { cardContentEl.classList.remove('hiding'); setTimeout(resolve, 80); }); }
 
             function createRipple(event) {
                 const btn = event.currentTarget;
@@ -1015,100 +999,62 @@
                 ripple.addEventListener('animationend', () => ripple.remove());
             }
 
-            function triggerCardGlow(duration = 700) {
-                cardEl.classList.add('glow');
-                setTimeout(() => cardEl.classList.remove('glow'), duration);
-            }
+            function triggerCardGlow(duration = 700) { cardEl.classList.add('glow'); setTimeout(() => cardEl.classList.remove('glow'), duration); }
 
-            // 复制当前卡片内容
             function copyCardContent() {
                 if (!hasEntered) return;
                 const title = cardTitleEl.textContent;
                 const subtitle = cardSubtitleEl.textContent;
                 const textToCopy = `「${title}」\n${subtitle.replace(/\n/g, ' ')}`;
-
                 if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(textToCopy).then(() => {
-                        showCopyToast();
-                    }).catch(() => {
-                        fallbackCopy(textToCopy);
-                    });
-                } else {
-                    fallbackCopy(textToCopy);
-                }
+                    navigator.clipboard.writeText(textToCopy).then(() => showCopyToast()).catch(() => fallbackCopy(textToCopy));
+                } else { fallbackCopy(textToCopy); }
             }
-
             function fallbackCopy(text) {
                 const textarea = document.createElement('textarea');
                 textarea.value = text;
-                textarea.style.position = 'fixed';
-                textarea.style.left = '-9999px';
-                textarea.style.top = '-9999px';
+                textarea.style.cssText = 'position:fixed;left:-9999px;top:-9999px';
                 document.body.appendChild(textarea);
-                textarea.focus();
                 textarea.select();
-                try {
-                    document.execCommand('copy');
-                    showCopyToast();
-                } catch (err) {
-                    // 复制失败不提示
-                }
+                try { document.execCommand('copy'); showCopyToast(); } catch(e) {}
                 document.body.removeChild(textarea);
             }
-
             function showCopyToast() {
                 if (toastTimer) clearTimeout(toastTimer);
                 copyToast.classList.add('show');
-                toastTimer = setTimeout(() => {
-                    copyToast.classList.remove('show');
-                    toastTimer = null;
-                }, 1800);
+                toastTimer = setTimeout(() => { copyToast.classList.remove('show'); toastTimer = null; }, 1800);
             }
 
             async function drawCard() {
                 if (isAnimating || !hasEntered) return;
                 isAnimating = true;
-
                 drawBtn.disabled = true;
                 btnTextEl.textContent = '抽取中...';
                 drawBtn.style.animationPlayState = 'paused';
-
                 const finalIndex = getRandomCardIndex();
                 let tempIndices = [];
                 const switchCount = 5;
                 for (let i = 0; i < switchCount; i++) {
-                    let idx;
-                    do {
-                        idx = getRandomCardIndex();
-                    } while (idx === currentCardIndex && cards.length > 1 && tempIndices.length === 0);
-                    if (i === 0 && idx === currentCardIndex && cards.length > 1) {
-                        idx = (currentCardIndex + 1) % cards.length;
-                    }
+                    let idx = getRandomCardIndex();
+                    if (i === 0 && idx === currentCardIndex && cards.length > 1) idx = (currentCardIndex + 1) % cards.length;
                     tempIndices.push(idx);
                 }
-
                 const intervals = [70, 90, 120, 160, 200];
                 for (let i = 0; i < switchCount; i++) {
                     await hideContent();
                     updateCardDOM(cards[tempIndices[i]]);
                     currentCardIndex = tempIndices[i];
                     await showContent();
-                    if (i < switchCount - 1) {
-                        await wait(intervals[i]);
-                    }
+                    if (i < switchCount - 1) await wait(intervals[i]);
                 }
-
                 await wait(180);
                 await hideContent();
                 updateCardDOM(cards[finalIndex]);
                 currentCardIndex = finalIndex;
                 await showContent();
-
                 triggerCardGlow(700);
-
                 drawCount++;
                 counterNumEl.textContent = drawCount;
-
                 drawBtn.disabled = false;
                 btnTextEl.textContent = '随机抽取';
                 drawBtn.style.animationPlayState = 'running';
@@ -1118,27 +1064,15 @@
             function enterMainApp() {
                 if (hasEntered) return;
                 hasEntered = true;
-
                 introScreen.classList.add('fade-out');
                 mainApp.classList.add('visible');
                 btnWrapper.classList.add('active');
                 counterEl.classList.add('active');
-
                 currentCardIndex = 0;
                 updateCardDOM(cards[0]);
                 cardContentEl.classList.add('hiding');
-
-                drawBtn.addEventListener('click', (event) => {
-                    createRipple(event);
-                    drawCard();
-                });
-
-                // 卡片内容点击复制
-                cardCopyArea.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                    copyCardContent();
-                });
-
+                drawBtn.addEventListener('click', (event) => { createRipple(event); drawCard(); });
+                cardCopyArea.addEventListener('click', (event) => { event.stopPropagation(); copyCardContent(); });
                 document.addEventListener('keydown', (event) => {
                     if (event.code === 'Space' || event.code === 'Enter') {
                         if (document.activeElement === drawBtn) return;
@@ -1146,15 +1080,11 @@
                         drawBtn.focus();
                         drawCard();
                     }
-                    // Ctrl+C 或 Cmd+C 复制当前卡片
                     if ((event.ctrlKey || event.metaKey) && event.code === 'KeyC') {
                         const selection = window.getSelection();
-                        if (!selection || selection.toString().length === 0) {
-                            copyCardContent();
-                        }
+                        if (!selection || selection.toString().length === 0) copyCardContent();
                     }
                 });
-
                 drawCard();
             }
 
@@ -1165,7 +1095,6 @@
                 e.preventDefault();
                 enterMainApp();
             });
-
             mainApp.classList.remove('visible');
             btnWrapper.classList.remove('active');
             counterEl.classList.remove('active');
