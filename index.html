@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>人生卡壳，翻翻名册 · 毛泽东选集名言卡片</title>
+    <title>人生卡壳，翻翻名册 · 智慧典籍卡片</title>
     <style>
         :root {
             --bg-from: #f5f0e8;
@@ -77,7 +77,7 @@
             opacity: 0.28;
         }
 
-        /* 左上角装饰区 - 二维码 + 标题融合 */
+        /* 左上角装饰区 */
         .book-title-decor {
             position: fixed;
             top: clamp(20px, 4vh, 36px);
@@ -99,8 +99,6 @@
             background: rgba(255, 255, 255, 0.8);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
         }
-
-        /* 迷你二维码容器 */
         .qr-mini {
             display: flex;
             align-items: center;
@@ -123,13 +121,19 @@
             border-radius: 10px;
             background: white;
         }
-        /* 右侧文字区域 */
+        
         .title-group {
             display: flex;
             flex-direction: column;
-            line-height: 1.3;
+            cursor: pointer;
+            border-radius: 40px;
+            padding: 4px 10px 4px 10px;
+            transition: background 0.2s ease;
         }
-        .book-title-text {
+        .title-group:active {
+            background: rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.08);
+        }
+        .main-title-text {
             font-family: 'Songti SC', 'STSong', 'Noto Serif SC', 'KaiTi', 'STKaiti', serif;
             font-size: clamp(0.9rem, 1.8vw, 1.25rem);
             font-weight: 700;
@@ -138,6 +142,30 @@
             transition: color 0.8s ease;
             text-shadow: 0 1px 2px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.1);
             white-space: nowrap;
+            line-height: 1.3;
+        }
+        .subtitle-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 2px;
+        }
+        .switch-trigger {
+            font-family: 'PingFang SC', system-ui;
+            font-size: 0.7rem;
+            font-weight: 500;
+            background: rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.15);
+            padding: 4px 10px;
+            border-radius: 30px;
+            color: rgb(var(--theme-r), var(--theme-g), var(--theme-b));
+            transition: all 0.2s;
+            white-space: nowrap;
+            letter-spacing: 0.03em;
+            line-height: 1;
+        }
+        .title-group:hover .switch-trigger {
+            background: rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.25);
+            transform: translateY(-1px);
         }
         .book-title-sub {
             font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
@@ -145,18 +173,17 @@
             font-weight: 500;
             color: rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.75);
             letter-spacing: 0.08em;
-            margin-top: 2px;
             transition: color 0.8s ease;
             white-space: nowrap;
         }
 
-        /* 计数器样式优化：视觉上与左侧对称 */
+        /* 计数器 */
         .counter {
             position: fixed;
             top: clamp(24px, 5vh, 40px);
             right: clamp(24px, 5vw, 48px);
             z-index: 10;
-            font-family: 'SF Mono', 'JetBrains Mono', 'Menlo', 'Consolas', 'Courier New', monospace;
+            font-family: 'SF Mono', monospace;
             font-size: 0.8rem;
             color: var(--text-counter);
             letter-spacing: 0.06em;
@@ -170,7 +197,6 @@
             padding: 8px 16px;
             border-radius: 20px;
             backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
         }
         .counter.active {
             opacity: 1;
@@ -185,60 +211,11 @@
             transition: background 0.8s ease;
         }
         @keyframes dotPulse {
-            0%, 100% {
-                opacity: 0.4;
-                transform: scale(0.7);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.4);
-            }
+            0%, 100% { opacity: 0.4; transform: scale(0.7); }
+            50% { opacity: 1; transform: scale(1.4); }
         }
 
-        /* 响应式调整：让左右留白视觉对称 */
-        @media (max-width: 560px) {
-            .book-title-decor {
-                top: 12px;
-                left: 12px;
-                padding: 5px 12px 5px 8px;
-                gap: 8px;
-            }
-            .qr-mini-img {
-                width: 38px;
-                height: 38px;
-            }
-            .book-title-text {
-                font-size: 0.8rem;
-            }
-            .book-title-sub {
-                font-size: 0.6rem;
-            }
-            /* 计数器右侧距离微调，与左侧装饰边距视觉平衡 */
-            .counter {
-                right: 16px;
-                top: 16px;
-                padding: 6px 12px;
-                font-size: 0.7rem;
-            }
-        }
-        @media (max-width: 420px) {
-            .qr-mini-img {
-                width: 34px;
-                height: 34px;
-            }
-            .book-title-text {
-                font-size: 0.7rem;
-            }
-            .book-title-sub {
-                font-size: 0.55rem;
-            }
-            .counter {
-                right: 12px;
-                top: 12px;
-                padding: 5px 10px;
-            }
-        }
-
+        /* 封面样式 + 书籍列表 */
         .intro-screen {
             position: fixed;
             inset: 0;
@@ -260,15 +237,14 @@
             pointer-events: none;
         }
 
+        /* 卡片本身不再设置滚动条，内容自然撑开，高度自适应 */
         .intro-card {
             background: #ffffff;
             border-radius: 36px;
-            padding: 48px 44px 64px;
-            max-width: 600px;
+            padding: 32px 32px 48px;
+            max-width: 620px;
             width: 88vw;
-            box-shadow: 0 4px 20px rgba(60, 40, 20, 0.07),
-                0 12px 48px rgba(60, 40, 20, 0.1),
-                0 28px 80px rgba(60, 40, 20, 0.08);
+            box-shadow: 0 4px 20px rgba(60, 40, 20, 0.07), 0 12px 48px rgba(60, 40, 20, 0.1);
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -276,89 +252,212 @@
             gap: 18px;
             animation: cardEntry 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
             border-left: 5px solid #c0392b;
-        }
-        .intro-emoji {
-            font-size: clamp(4.5rem, 11vw, 6.5rem);
-            display: block;
-            animation: emojiFloat 3s ease-in-out infinite;
-            filter: drop-shadow(0 4px 12px rgba(180, 35, 35, 0.2));
-        }
-        .intro-book-name {
-            font-family: 'Songti SC', 'STSong', 'Noto Serif SC', 'KaiTi', serif;
-            font-size: clamp(1.4rem, 3vw, 2rem);
-            font-weight: 700;
-            color: #c0392b;
-            letter-spacing: 0.12em;
-            background: linear-gradient(135deg, #a32222, #c0392b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .intro-title {
-            font-family: 'Songti SC', 'STSong', 'Noto Serif SC', serif;
-            font-size: clamp(1.8rem, 4.5vw, 2.6rem);
-            font-weight: 700;
-            color: var(--text-title);
-            letter-spacing: 0.05em;
-            line-height: 1.3;
-        }
-        .intro-divider {
-            width: 48px;
-            height: 4px;
-            border-radius: 2px;
-            background: linear-gradient(90deg, #c0392b, #e67e22);
-            opacity: 0.8;
-        }
-        .intro-subtitle {
-            font-size: clamp(0.95rem, 1.6vw, 1.1rem);
-            color: var(--text-sub);
-            line-height: 1.7;
-            opacity: 0.85;
-            max-width: 400px;
-        }
-        .intro-hint {
-            margin-top: 32px;
-            font-size: 0.95rem;
-            color: #c0392b;
-            letter-spacing: 0.06em;
-            animation: hintBlink 2s ease-in-out infinite;
-            font-weight: 500;
-            background: rgba(192, 57, 43, 0.06);
-            padding: 10px 24px;
-            border-radius: 30px;
-        }
-        @keyframes hintBlink {
-            0%, 100% {
-                opacity: 0.5;
-                transform: translateY(0);
-            }
-            50% {
-                opacity: 1;
-                transform: translateY(-4px);
-            }
-        }
-        @keyframes cardEntry {
-            from {
-                opacity: 0;
-                transform: translateY(30px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        @keyframes emojiFloat {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            30% {
-                transform: translateY(-12px);
-            }
-            60% {
-                transform: translateY(-5px);
-            }
+            overflow: visible;   /* 确保卡片自身不产生滚动条 */
         }
 
+        .book-search {
+            width: 100%;
+            max-width: 320px;
+            margin: 4px 0 8px;
+        }
+        .book-search-input {
+            width: 100%;
+            padding: 10px 16px;
+            font-family: 'PingFang SC', system-ui;
+            font-size: 0.9rem;
+            border: 1px solid rgba(180, 35, 35, 0.25);
+            border-radius: 60px;
+            background: rgba(255, 248, 240, 0.8);
+            outline: none;
+            transition: all 0.2s;
+            text-align: center;
+            color: #2c2418;
+        }
+        .book-search-input:focus {
+            border-color: #c0392b;
+            box-shadow: 0 0 0 3px rgba(192,57,43,0.1);
+        }
+        .book-stats {
+            font-size: 0.75rem;
+            color: #9e8b78;
+            background: rgba(0,0,0,0.03);
+            padding: 4px 12px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-bottom: 4px;
+            letter-spacing: 0.02em;
+        }
+        /* 包装器用于固定渐变层位置 */
+        .book-selector-wrapper {
+            position: relative;
+            width: 100%;
+            margin-bottom: 4px;
+        }
+        .book-selector {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            max-height: 260px;
+            overflow-y: auto;
+            padding: 8px 12px;
+            width: 100%;
+            scrollbar-width: thin;
+        }
+        .book-selector::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        .book-selector::-webkit-scrollbar-track {
+            background: #f0eadd;
+            border-radius: 4px;
+        }
+        .book-selector::-webkit-scrollbar-thumb {
+            background: rgba(180, 35, 35, 0.3);
+            border-radius: 4px;
+        }
+        /* 底部渐变遮罩，绝对定位，不随内容滚动 */
+        .selector-fade {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.95));
+            pointer-events: none;
+            border-radius: 0 0 20px 20px;
+            transition: opacity 0.2s ease;
+            opacity: 0;
+            z-index: 2;
+        }
+        .book-selector-wrapper.scrollable .selector-fade {
+            opacity: 0.9;
+        }
+        .book-selector-item {
+            font-family: 'PingFang SC', system-ui;
+            font-size: 0.85rem;
+            font-weight: 550;
+            padding: 6px 16px;
+            border-radius: 40px;
+            background: rgba(0,0,0,0.02);
+            border: 1px solid rgba(180, 35, 35, 0.2);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #5c4a36;
+            backdrop-filter: blur(4px);
+            white-space: nowrap;
+        }
+        .book-selector-item.active {
+            background: #c0392b;
+            color: white;
+            border-color: #c0392b;
+            box-shadow: 0 4px 12px rgba(192,57,43,0.3);
+        }
+        .book-selector-item:hover:not(.active) {
+            background: rgba(192,57,43,0.1);
+            transform: translateY(-2px);
+        }
+        .book-selector-item.suggest-btn {
+            background: rgba(192,57,43,0.08);
+            border-color: rgba(192,57,43,0.4);
+            color: #c0392b;
+            font-weight: 600;
+        }
+        .book-selector-item.suggest-btn:hover {
+            background: rgba(192,57,43,0.18);
+            transform: translateY(-2px);
+        }
+
+        .intro-emoji { font-size: clamp(3.5rem, 10vw, 5rem); display: block; animation: emojiFloat 3s ease-in-out infinite; }
+        .intro-book-name { font-family: 'Songti SC', serif; font-size: clamp(1.3rem, 3vw, 1.9rem); font-weight: 700; color: #c0392b; letter-spacing: 0.08em; }
+        .intro-title { font-family: 'Songti SC', serif; font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 700; color: var(--text-title); }
+        .intro-divider { width: 48px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, #c0392b, #e67e22); }
+        .intro-subtitle { font-size: clamp(0.85rem, 1.6vw, 1rem); color: var(--text-sub); line-height: 1.5; max-width: 400px; margin: 0 10px; }
+        .intro-hint { margin-top: 8px; font-size: 0.85rem; color: #c0392b; animation: hintBlink 2s ease-in-out infinite; font-weight: 500; background: rgba(192,57,43,0.06); padding: 8px 24px; border-radius: 30px; }
+        .no-books-tip {
+            font-size: 0.8rem;
+            color: #9e8b78;
+            padding: 12px;
+        }
+        /* 建议二维码弹窗 */
+        .suggest-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.2s, opacity 0.2s;
+            cursor: pointer;
+        }
+        .suggest-modal.show {
+            visibility: visible;
+            opacity: 1;
+        }
+        .suggest-card {
+            background: white;
+            border-radius: 32px;
+            padding: 28px 24px 32px;
+            max-width: 280px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            animation: scaleIn 0.25s ease-out;
+            cursor: default;
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .suggest-qr {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 16px;
+            background: #f5f0e8;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .suggest-qr img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .suggest-text {
+            font-family: 'PingFang SC', system-ui;
+            font-size: 0.9rem;
+            color: #5c4a36;
+            margin-top: 8px;
+            line-height: 1.4;
+        }
+        .close-suggest {
+            margin-top: 16px;
+            background: rgba(192,57,43,0.1);
+            padding: 6px 18px;
+            border-radius: 40px;
+            display: inline-block;
+            font-size: 0.8rem;
+            color: #c0392b;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .close-suggest:hover {
+            background: rgba(192,57,43,0.2);
+        }
+
+        @keyframes hintBlink { 0%,100% { opacity: 0.5; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-4px); } }
+        @keyframes cardEntry { from { opacity: 0; transform: translateY(30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes emojiFloat { 0%,100% { transform: translateY(0); } 30% { transform: translateY(-12px); } 60% { transform: translateY(-5px); } }
+
+        /* 主应用卡片界面 */
         .main-app {
             position: relative;
             z-index: 1;
@@ -387,286 +486,61 @@
             max-height: 650px;
             background: rgba(var(--card-bg-r), var(--card-bg-g), var(--card-bg-b), var(--card-bg-alpha));
             border-radius: 32px;
-            box-shadow: 0 4px 24px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.08),
-                0 12px 48px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.1),
-                0 28px 80px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.07);
+            box-shadow: 0 4px 24px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.08);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 40px 36px 100px;
-            animation: cardEntry 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+            animation: cardEntry 0.7s forwards;
             border-left: 6px solid rgb(var(--theme-r), var(--theme-g), var(--theme-b));
-            border-right: 1px solid rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.1);
-            border-top: 1px solid rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.06);
-            border-bottom: 1px solid rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.08);
-            transition: background 0.8s ease, border-left-color 0.8s ease, box-shadow 0.5s ease,
-                border-right-color 0.8s ease, border-top-color 0.8s ease, border-bottom-color 0.8s ease;
+            transition: background 0.8s ease, border-left-color 0.8s ease, box-shadow 0.5s ease;
         }
         .card.glow {
             border-left-color: rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.7);
-            box-shadow: 0 4px 24px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.12),
-                0 12px 56px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.15),
-                0 32px 96px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.1),
-                0 0 0 2px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.15),
-                0 0 100px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.12);
-            transition: border-left-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 24px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.12), 0 12px 56px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.15), 0 0 0 2px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.15);
         }
-
         .card__content {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            gap: 0;
+            width: 100%;
             transition: opacity 0.12s ease, transform 0.12s ease;
             opacity: 1;
             transform: scale(1);
-            width: 100%;
         }
-        .card__content.hiding {
-            opacity: 0;
-            transform: scale(0.93);
-            transition: opacity 0.08s ease, transform 0.08s ease;
+        .card__content.hiding { opacity: 0; transform: scale(0.93); transition: opacity 0.08s ease, transform 0.08s ease; }
+        .card__emoji { font-size: clamp(3.5rem, 8vw, 5.5rem); line-height: 1; margin-bottom: clamp(18px, 3.5vh, 30px); animation: emojiFloat 3s ease-in-out infinite; filter: drop-shadow(0 6px 16px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.25)); }
+        .card__copy-area { cursor: pointer; display: flex; flex-direction: column; align-items: center; width: 100%; border-radius: 16px; padding: 12px 8px; transition: background 0.1s; }
+        .card__copy-area:active { background: rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.04); }
+        .card__title { font-family: 'Songti SC', serif; font-size: clamp(1.5rem, 3.8vw, 2.5rem); font-weight: 700; color: var(--text-title); line-height: 1.35; margin-bottom: clamp(14px, 2.5vh, 22px); }
+        .card__divider { width: 40px; height: 4px; border-radius: 2px; background: rgb(var(--theme-r), var(--theme-g), var(--theme-b)); opacity: 0.6; margin-bottom: clamp(14px, 2.5vh, 22px); transition: background 0.8s ease; }
+        .card__subtitle { font-family: 'PingFang SC', system-ui; font-size: clamp(0.88rem, 1.5vw, 1.05rem); font-weight: 400; color: var(--text-sub); line-height: 1.7; white-space: pre-line; max-width: 440px; opacity: 0.85; }
+        .copy-toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); z-index: 100; background: rgba(30,30,30,0.88); color: white; padding: 14px 28px; border-radius: 30px; font-weight: 500; pointer-events: none; opacity: 0; transition: opacity 0.35s ease, transform 0.35s; white-space: nowrap; backdrop-filter: blur(12px); }
+        .copy-toast.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        .card__book-badge { position: absolute; top: clamp(16px,3vh,24px); right: clamp(16px,3vw,28px); font-size: 0.75rem; font-weight: 600; color: rgb(var(--theme-r), var(--theme-g), var(--theme-b)); background: rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.08); padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.2); pointer-events: none; }
+        .btn-wrapper { position: fixed; bottom: clamp(28px, 5vh, 48px); left: 50%; transform: translateX(-50%); z-index: 20; display: flex; flex-direction: column; align-items: center; gap: 10px; opacity: 0; pointer-events: none; transition: opacity 0.5s ease 0.3s; }
+        .btn-wrapper.active { opacity: 1; pointer-events: all; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 17px 40px; font-weight: 600; color: #ffffff; background: rgb(var(--theme-r), var(--theme-g), var(--theme-b)); border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 8px 32px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.35); transition: all 0.3s; animation: btnFloat 3.5s ease-in-out infinite; min-width: 190px; }
+        @keyframes btnFloat { 0%,100% { transform: translateY(0); } 35% { transform: translateY(-8px); } 65% { transform: translateY(-3px); } }
+        .btn:hover { background: rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.82); transform: translateY(-3px); animation-play-state: paused; }
+        .btn:active { transform: translateY(1px) scale(0.96); }
+        .btn__ripple { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.3); transform: scale(0); animation: ripple 0.6s ease-out forwards; pointer-events: none; }
+        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+        /* 响应式 */
+        @media (max-width:560px) {
+            .intro-card { padding: 24px 20px 36px; }
+            .book-selector { max-height: 200px; gap: 8px; }
+            .book-selector-item { font-size: 0.75rem; padding: 5px 12px; }
+            .book-search-input { font-size: 0.8rem; padding: 8px 12px; }
+            .book-stats { font-size: 0.7rem; }
         }
-
-        .card__emoji {
-            font-size: clamp(3.5rem, 8vw, 5.5rem);
-            line-height: 1;
-            margin-bottom: clamp(18px, 3.5vh, 30px);
-            display: block;
-            animation: emojiFloat 3s ease-in-out infinite;
-            filter: drop-shadow(0 6px 16px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.25));
-            pointer-events: none;
-        }
-
-        .card__copy-area {
-            cursor: pointer;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            transition: opacity 0.2s ease;
-            -webkit-tap-highlight-color: rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.15);
-            border-radius: 16px;
-            padding: 12px 8px;
-            margin: -12px -8px;
-        }
-        .card__copy-area:active {
-            background: rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.04);
-        }
-
-        .card__title {
-            font-family: 'Songti SC', 'STSong', 'Noto Serif SC', 'SimSun', 'KaiTi', 'STKaiti', serif;
-            font-size: clamp(1.5rem, 3.8vw, 2.5rem);
-            font-weight: 700;
-            color: var(--text-title);
-            line-height: 1.35;
-            letter-spacing: 0.05em;
-            max-width: 100%;
-            word-break: keep-all;
-            overflow-wrap: break-word;
-            margin-bottom: clamp(14px, 2.5vh, 22px);
-            pointer-events: none;
-        }
-        .card__divider {
-            width: 40px;
-            height: 4px;
-            border-radius: 2px;
-            background: rgb(var(--theme-r), var(--theme-g), var(--theme-b));
-            opacity: 0.6;
-            margin-bottom: clamp(14px, 2.5vh, 22px);
-            transition: background 0.8s ease;
-            pointer-events: none;
-        }
-        .card__subtitle {
-            font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', system-ui, sans-serif;
-            font-size: clamp(0.88rem, 1.5vw, 1.05rem);
-            font-weight: 400;
-            color: var(--text-sub);
-            line-height: 1.7;
-            letter-spacing: 0.02em;
-            max-width: 440px;
-            opacity: 0.8;
-            white-space: pre-line;
-            pointer-events: none;
-        }
-
-        .copy-toast {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.8);
-            z-index: 100;
-            background: rgba(30, 30, 30, 0.88);
-            color: #ffffff;
-            padding: 14px 28px;
-            border-radius: 30px;
-            font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
-            font-size: 0.95rem;
-            font-weight: 500;
-            letter-spacing: 0.04em;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
-            white-space: nowrap;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-        }
-        .copy-toast.show {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
-        .copy-toast .toast-icon {
-            margin-right: 8px;
-            font-size: 1.1rem;
-        }
-
-        .card__book-badge {
-            position: absolute;
-            top: clamp(16px, 3vh, 24px);
-            right: clamp(16px, 3vw, 28px);
-            font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: rgb(var(--theme-r), var(--theme-g), var(--theme-b));
-            letter-spacing: 0.06em;
-            opacity: 0.75;
-            transition: color 0.8s ease;
-            background: rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.06);
-            padding: 6px 14px;
-            border-radius: 20px;
-            border: 1px solid rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.15);
-            pointer-events: none;
-            text-align: right;
-            line-height: 1.4;
-        }
-
-        .btn-wrapper {
-            position: fixed;
-            bottom: clamp(28px, 5vh, 48px);
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 20;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s ease 0.3s;
-        }
-        .btn-wrapper.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 17px 40px;
-            font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', system-ui, sans-serif;
-            font-size: 1.1rem;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            color: #ffffff;
-            background: rgb(var(--theme-r), var(--theme-g), var(--theme-b));
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 8px 32px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.35);
-            transition: all 0.35s cubic-bezier(0.25, 0.1, 0.25, 1), background 0.8s ease;
-            position: relative;
-            overflow: hidden;
-            white-space: nowrap;
-            animation: btnFloat 3.5s ease-in-out infinite;
-            -webkit-tap-highlight-color: transparent;
-            outline: none;
-            min-width: 190px;
-        }
-        @keyframes btnFloat {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            35% {
-                transform: translateY(-8px);
-            }
-            65% {
-                transform: translateY(-3px);
-            }
-        }
-        .btn:hover {
-            background: rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.82);
-            box-shadow: 0 12px 40px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.5);
-            transform: translateY(-3px);
-            animation-play-state: paused;
-        }
-        .btn:active {
-            background: rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.65);
-            box-shadow: 0 4px 16px rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.4);
-            transform: translateY(1px) scale(0.96);
-            transition: all 0.1s ease;
-            animation-play-state: paused;
-        }
-        .btn:focus-visible {
-            outline: 3px solid rgba(var(--theme-r), var(--theme-g), var(--theme-b), 0.6);
-            outline-offset: 5px;
-        }
-        .btn__ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.25);
-            transform: scale(0);
-            animation: ripple 0.6s ease-out forwards;
-            pointer-events: none;
-        }
-        @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-        .btn:disabled {
-            cursor: not-allowed;
-            opacity: 0.65;
-            animation-play-state: paused;
-            pointer-events: none;
-        }
-        .btn__icon {
-            display: inline-block;
-            font-size: 1.3rem;
-            transition: transform 0.3s ease;
-        }
-        .btn:not(:disabled):hover .btn__icon {
-            transform: rotate(-15deg) scale(1.15);
-        }
-        @media (max-width: 480px) {
-            .intro-card { padding: 32px 22px 48px; border-radius: 28px; }
-            .card { width: 94vw; height: 72dvh; min-height: 360px; border-radius: 24px; padding: 36px 22px 90px; }
-            .btn { padding: 15px 30px; font-size: 1rem; min-width: 160px; }
-            .bg-orb--top { width: 280px; height: 280px; top: -130px; right: -90px; }
-            .bg-orb--bottom { width: 220px; height: 220px; bottom: -110px; left: -80px; }
-            .bg-orb--mid { width: 130px; height: 130px; }
-            .card__book-badge { font-size: 0.65rem; padding: 4px 10px; top: 10px; right: 10px; }
-            .copy-toast { font-size: 0.85rem; padding: 12px 22px; }
-        }
-        @media (min-width: 1200px) {
-            .card { max-width: 750px; height: 70dvh; max-height: 680px; border-radius: 36px; padding: 52px 52px 120px; }
-        }
-        @media (max-height: 500px) {
-            .intro-card { padding: 20px 20px 32px; }
-            .card { height: 82dvh; min-height: 300px; padding: 16px 20px 75px; border-radius: 20px; }
-            .card__emoji { font-size: 2.4rem; margin-bottom: 8px; }
-            .card__title { font-size: 1.2rem; margin-bottom: 6px; }
-            .card__divider { margin-bottom: 8px; width: 28px; height: 3px; }
-            .card__subtitle { font-size: 0.8rem; }
-            .btn { padding: 10px 24px; font-size: 0.9rem; }
-            .card__book-badge { font-size: 0.6rem; top: 8px; right: 8px; }
+        @media (max-width:480px) { 
+            .card { padding: 36px 22px 90px; } 
+            .btn { padding: 15px 30px; } 
+            .qr-mini-img { width: 38px; height: 38px; }
         }
     </style>
 </head>
@@ -675,269 +549,375 @@
     <div class="bg-orb bg-orb--bottom" aria-hidden="true"></div>
     <div class="bg-orb bg-orb--mid" aria-hidden="true"></div>
 
-    <!-- 左上角融合区域：二维码 + 标题（替换原五角星） -->
     <div class="book-title-decor" aria-hidden="false">
-        <div class="qr-mini" id="qrMiniContainer" title="扫码访问 毛选名言卡片集">
+        <div class="qr-mini" id="qrMiniContainer" title="扫码访问卡片集">
             <img class="qr-mini-img" id="qrMiniImg" alt="扫码打开网页" />
         </div>
-        <div class="title-group">
-            <div class="book-title-text"></div>
-            <div class="book-title-sub"></div>
+        <div class="title-group" id="titleGroupTrigger">
+            <div class="main-title-text">人生卡壳，翻翻名册</div>
+            <div class="subtitle-row">
+                <span class="switch-trigger">换书</span>
+                <div class="book-title-sub" id="dynamicSubTitle">易经</div>
+            </div>
         </div>
     </div>
 
-    <div class="copy-toast" id="copyToast">
-        <span class="toast-icon">📋</span>已复制到剪贴板
+    <div class="counter" id="counter">
+        <span class="counter__dot"></span>
+        <span>抽取 <strong id="counterNum">0</strong>&nbsp;次</span>
+    </div>
+    <div class="copy-toast" id="copyToast"><span class="toast-icon">📋</span>已复制到剪贴板</div>
+
+    <!-- 封面：包含书籍搜索和切换列表 -->
+    <div class="intro-screen" id="introScreen">
+        <div class="intro-card" id="introCard">
+            <span class="intro-emoji" id="introEmoji">📚</span>
+            <div class="intro-book-name" id="introBookName">易经</div>
+            <h1 class="intro-title">人生卡壳，翻翻名册</h1>
+            <div class="intro-divider"></div>
+            <p class="intro-subtitle" id="introDesc">群经之首 · 大道之源<br>触碰智慧，随机抽取</p>
+            <p class="intro-hint">✨ 进入书籍</p>
+            <div class="book-search">
+                <input type="text" class="book-search-input" id="bookSearchInput" placeholder="🔍 搜索典籍名称" autocomplete="off">
+            </div>
+            <div class="book-stats" id="bookStats">加载中...</div>
+            <div class="book-selector-wrapper" id="bookSelectorWrapper">
+                <div class="book-selector" id="bookSelector"></div>
+                <div class="selector-fade"></div>
+            </div>
+        </div>
     </div>
 
-    <div class="intro-screen" id="introScreen">
-        <div class="intro-card">
-            <span class="intro-emoji" aria-hidden="true">📕</span>
-            <div class="intro-book-name"></div>
-            <h1 class="intro-title"></h1>
-            <div class="intro-divider" aria-hidden="true"></div>
-            <p class="intro-subtitle"></p>
-            <p class="intro-hint">✨ 点击任意位置翻开书页</p>
+    <!-- 建议书籍二维码弹窗 -->
+    <div class="suggest-modal" id="suggestModal">
+        <div class="suggest-card">
+            <div class="suggest-qr">
+                <img id="suggestQrImg" alt="建议二维码" />
+            </div>
+            <div class="suggest-text">扫码向作者推荐<br>您喜爱的典籍<br>📖</div>
+            <div class="close-suggest" id="closeSuggestBtn">关闭</div>
         </div>
     </div>
 
     <div class="main-app" id="mainApp">
-        <div class="counter" id="counter" aria-live="polite">
-            <span class="counter__dot" aria-hidden="true"></span>
-            <span>已抽取&nbsp;<strong id="counterNum">0</strong>&nbsp;次</span>
-        </div>
-
-        <main class="card" id="card" role="region" aria-label="毛选名言卡片展示区">
-            <div class="card__book-badge"></div>
+        <main class="card" id="card">
+            <div class="card__book-badge" id="cardBadge"></div>
             <div class="card__content" id="cardContent">
                 <span class="card__emoji" id="cardEmoji">📕</span>
-                <div class="card__copy-area" id="cardCopyArea" title="点击复制名言">
+                <div class="card__copy-area" id="cardCopyArea">
                     <h1 class="card__title" id="cardTitle">点击下方按钮</h1>
-                    <div class="card__divider" aria-hidden="true"></div>
-                    <p class="card__subtitle" id="cardSubtitle">抽取一张毛选名言卡片</p>
+                    <div class="card__divider"></div>
+                    <p class="card__subtitle" id="cardSubtitle">抽取一张智慧卡片</p>
                 </div>
             </div>
         </main>
-
         <div class="btn-wrapper" id="btnWrapper">
-            <button class="btn" id="drawBtn" title="随机抽取一张毛选名言卡片" aria-label="随机抽取卡片">
-                <span class="btn__icon" aria-hidden="true">🎲</span>
-                <span id="btnText">随机抽取</span>
-            </button>
+            <button class="btn" id="drawBtn"><span class="btn__icon">🎲</span><span id="btnText">随机抽取</span></button>
         </div>
     </div>
 
     <script>
-        (function() {
-            // ================= 全局配置常量（方便统一修改） =================
-            const siteConfig = {
-                mainTitle: "人生卡壳，翻翻名册",
-                subTitle: "毛泽东选集",
-                collectionDesc: "经典名言卡片集<br>汲取智慧，砥砺前行",
-                qrUrl: window.location.href || "https://maoxuan-card.example.com"
+        (function(){            
+            // ================= 典籍 =================
+            // ================= 孙子兵法 =================
+            const BOOK1 = {
+                // ==================== 1. 毛泽东选集 ====================
+                '毛泽东选集': {
+                    name: '毛泽东选集',
+                    description: '实事求是 · 独立自主 · 群众路线',
+                    icon: '📕',
+                    cards: [
+                        { emoji: '🧭', title: '分清敌友，是革命的首要问题', subtitle: '谁是我们的敌人？谁是我们的朋友？这个问题是革命的首要问题。\n——《中国社会各阶级的分析》1925年' },
+                        { emoji: '⚡', title: '革命不是请客吃饭', subtitle: '革命是暴动，是一个阶级推翻一个阶级的暴烈的行动。\n——《湖南农民运动考察报告》1927年' },
+                        { emoji: '〰️', title: '矫枉必须过正', subtitle: '不过正不能矫枉，终结旧秩序须用群众的革命方法。\n——《湖南农民运动考察报告》1927年' },
+                        { emoji: '🏹', title: '引而不发，跃如也', subtitle: '善于启发群众自觉，而非越俎代庖。\n——《湖南农民运动考察报告》1927年' },
+                        { emoji: '🗺️', title: '枪杆子里面出政权', subtitle: '须知政权是由枪杆子中取得的。\n——八七会议发言 1927年' },
+                        { emoji: '🔗', title: '支部建在连上', subtitle: '党的基层组织是战斗力的源泉，是团结官兵的纽带。\n——《井冈山的斗争》1928年' },
+                        { emoji: '🔥', title: '星星之火，可以燎原', subtitle: '看事情必须看它的实质，这才是可靠的科学的分析方法。\n——《星星之火，可以燎原》1930年' },
+                        { emoji: '📋', title: '没有调查，就没有发言权', subtitle: '一切结论产生于调查情况的末尾，而不是在它的先头。\n——《反对本本主义》1930年' },
+                        { emoji: '📖', title: '反对本本主义', subtitle: '不唯书、不唯上、只唯实，马克思主义的"本本"必须同我国实际结合。\n——《反对本本主义》1930年' },
+                        { emoji: '🤰', title: '调查如十月怀胎，解决如一朝分娩', subtitle: '调查就是解决问题，一切结论产生于调查末尾。\n——《反对本本主义》1930年' },
+                        { emoji: '🧱', title: '群众是真正的铜墙铁壁', subtitle: '什么力量也打不破的，完全打不破的。\n——《关心群众生活，注意工作方法》1934年' },
+                        { emoji: '🌉', title: '任务是过河，方法就是桥或船', subtitle: '不解决方法问题，任务也只是瞎说一顿。\n——《关心群众生活，注意工作方法》1934年' },
+                        { emoji: '🐸', title: '反对井底之蛙的视角', subtitle: '马克思主义者看问题，不但要看到部分，而且要看到全体。\n——《论反对日本帝国主义的策略》1935年' },
+                        { emoji: '🚶', title: '长征是宣言书，是宣传队，是播种机', subtitle: '它向全世界宣告，红军是英雄好汉。\n——《论反对日本帝国主义的策略》1935年' },
+                        { emoji: '🩸', title: '尊重自己流血的经验', subtitle: '读书是学习，使用也是学习，而且是更重要的学习。\n——《中国革命战争的战略问题》1936年' },
+                        { emoji: '♟️', title: '没有全局在胸，投不下一着好棋子', subtitle: '指挥全局的人，最要紧的是照顾战争的全局。\n——《中国革命战争的战略问题》1936年' },
+                        { emoji: '💎', title: '伤其十指不如断其一指', subtitle: '集中优势兵力，各个歼灭敌人。\n——《中国革命战争的战略问题》1936年' },
+                        { emoji: '🤼', title: '聪明的拳师往往退让一步', subtitle: '蠢人气势汹汹先出全副本领，反被退让者打倒。\n——《中国革命战争的战略问题》1936年' },
+                        { emoji: '🦅', title: '敌进我退，敌驻我扰，敌疲我打，敌退我追', subtitle: '游击战争十六字诀，机动灵活的战略战术。\n——井冈山斗争时期总结' },
+                        { emoji: '🍐', title: '要知道梨子的滋味，就得亲口吃一吃', subtitle: '一切真知都是从直接经验发源的。\n——《实践论》1937年' },
+                        { emoji: '🔄', title: '实践、认识、再实践、再认识', subtitle: '这就是辩证唯物论的知行统一观。\n——《实践论》1937年' },
+                        { emoji: '🌱', title: '事物发展的根本原因在于内部矛盾', subtitle: '外因是变化的条件，内因是变化的根据。\n——《矛盾论》1937年' },
+                        { emoji: '🧶', title: '抓住主要矛盾', subtitle: '研究任何过程，全力找出它的主要矛盾，一切问题就迎刃而解。\n——《矛盾论》1937年' },
+                        { emoji: '⚖️', title: '具体地分析具体情况', subtitle: '马克思主义的最本质的东西，马克思主义的活的灵魂。\n——《矛盾论》1937年' },
+                        { emoji: '🛡️', title: '自由主义是消极的腐蚀剂', subtitle: '事不关己高高挂起；明知不对少说为佳；明哲保身但求无过。\n——《反对自由主义》1937年' },
+                        { emoji: '🐢', title: '抗日战争是持久战', subtitle: '速胜论和亡国论都是错误的，最后胜利是中国的。\n——《论持久战》1938年' },
+                        { emoji: '⚔️', title: '保存自己，消灭敌人', subtitle: '战争的目的不是别的，就是保存自己，消灭敌人。\n——《论持久战》1938年' },
+                        { emoji: '💣', title: '武器是重要因素，但决定因素是人', subtitle: '原子弹是纸老虎，军力经济力要人去掌握。\n——《论持久战》1938年' },
+                        { emoji: '🧱', title: '兵民是胜利之本', subtitle: '战争的伟力之最深厚的根源，存在于民众之中。\n——《论持久战》1938年' },
+                        { emoji: '⚠️', title: '人不犯我，我不犯人；人若犯我，我必犯人', subtitle: '坚决自卫，绝不在原则问题上妥协退让。\n——1939年同中央社等三记者的谈话' },
+                        { emoji: '🔩', title: '白求恩精神：毫不利己，专门利人', subtitle: '一个人能力有大小，但只要有这点精神，就是一个高尚的人。\n——《纪念白求恩》1939年' },
+                        { emoji: '📘', title: '新民主主义革命', subtitle: '无产阶级领导的，人民大众的，反帝反封建的革命。\n——《新民主主义论》1940年' },
+                        { emoji: '🎯', title: '实事求是', subtitle: '"实事"就是客观存在着的一切事物，"是"就是规律性，"求"就是去研究。\n——《改造我们的学习》1941年' },
+                        { emoji: '👥', title: '群众是真正的英雄', subtitle: '而我们自己则往往是幼稚可笑的，不了解这一点就不能得到起码的知识。\n——《〈农村调查〉的序言和跋》1941年' },
+                        { emoji: '✍️', title: '惩前毖后，治病救人', subtitle: '对以前的错误一定要揭发，不讲情面，以便使后来的工作慎重些。\n——《整顿党的作风》1942年' },
+                        { emoji: '🌊', title: '到什么山上唱什么歌', subtitle: '看菜吃饭，量体裁衣，我们无论做什么事都要看情形办理。\n——《反对党八股》1942年' },
+                        { emoji: '🔦', title: '只有代表群众才能教育群众', subtitle: '只有做群众的学生才能做群众的先生。\n——《在延安文艺座谈会上的讲话》1942年' },
+                        { emoji: '🔄', title: '从群众中来，到群众中去', subtitle: '将群众的分散意见集中起来，再到群众中坚持下去。\n——《关于领导方法的若干问题》1943年' },
+                        { emoji: '🌾', title: '自己动手，丰衣足食', subtitle: '我们有打仗的军队，又有劳动的军队。\n——《组织起来》1943年' },
+                        { emoji: '🤝', title: '为人民服务', subtitle: '人固有一死，或重于泰山，或轻于鸿毛。\n——《为人民服务》1944年' },
+                        { emoji: '🌍', title: '五湖四海走到一起', subtitle: '我们都是来自五湖四海，为了一个共同的革命目标，走到一起来了。\n——《为人民服务》1944年' },
+                        { emoji: '🎖️', title: '下定决心，不怕牺牲，排除万难，去争取胜利', subtitle: '愚公移山，改造中国。\n——《愚公移山》1945年' },
+                        { emoji: '👑', title: '历史是人民创造的', subtitle: '人民，只有人民，才是创造世界历史的动力。\n——《论联合政府》1945年' },
+                        { emoji: '🏔️', title: '前途是光明的，道路是曲折的', subtitle: '我们和全体人民团结起来，一定能够排除万难。\n——《论联合政府》1945年' },
+                        { emoji: '🧹', title: '扫帚不到，灰尘照例不会自己跑掉', subtitle: '凡是反动的东西，你不打，他就不倒。\n——《抗日战争胜利后的时局和我们的方针》1945年' },
+                        { emoji: '🤝', title: '针锋相对，寸土必争', subtitle: '人民的武装，一支枪、一粒子弹，都要保存，不能交出去。\n——《抗日战争胜利后的时局和我们的方针》1945年' },
+                        { emoji: '🧱', title: '把方针建立在"放在自己力量的基点上"', subtitle: '独立自主，自力更生，不依赖外援。\n——《抗日战争胜利后的时局和我们的方针》1945年' },
+                        { emoji: '🧑‍🌾', title: '共产党人好比种子，人民好比土地', subtitle: '我们到了一个地方，就要同那里的人民结合起来，在人民中间生根、开花。\n——《关于重庆谈判》1945年' },
+                        { emoji: '🐯', title: '一切反动派都是纸老虎', subtitle: '看起来可怕，实际上经不起人民力量的一击。\n——1946年会见安娜·路易斯·斯特朗' },
+                        { emoji: '♟️', title: '战略上藐视敌人，战术上重视敌人', subtitle: '既要有必胜的信念，又要慎重对待每一个具体问题。\n——《关于目前党的政策中的几个重要问题》1948年' },
+                        { emoji: '🚶‍♂️', title: '夺取全国胜利，只是万里长征走完了第一步', subtitle: '以后的路程更长，工作更伟大，更艰苦。\n——《在七届二中全会上的报告》1949年' },
+                        { emoji: '🍬', title: '警惕糖衣炮弹', subtitle: '可能有这样一些共产党人，在糖弹面前要打败仗。\n——《在七届二中全会上的报告》1949年' },
+                        { emoji: '🧱', title: '我们不但善于破坏一个旧世界', subtitle: '我们还将善于建设一个新世界。\n——《在七届二中全会上的报告》1949年' },
+                        { emoji: '📜', title: '论人民民主专政', subtitle: '对人民内部的民主方面和对反动派的专政方面，互相结合起来。\n——《论人民民主专政》1949年' },
+                        { emoji: '📐', title: '学会"弹钢琴"', subtitle: '工作要有节奏，既要突出重点又要统筹兼顾。\n——《党委会的工作方法》1949年' },
+                        { emoji: '🪑', title: '党委书记要善于当"班长"', subtitle: '有问题摆到桌面上来，不要在背后议论。\n——《党委会的工作方法》1949年' },
+                        { emoji: '🚫', title: '封锁吧，封锁十年八年', subtitle: '中国的一切问题都解决了，中国人死都不怕，还怕困难吗？\n——《别了，司徒雷登》1949年' },
+                        { emoji: '🎉', title: '中国人民从此站起来了', subtitle: '我们的民族将再也不是一个被人侮辱的民族了。\n——1949年全国政协第一届全体会议' },
+                        { emoji: '🔍', title: '虚心使人进步，骄傲使人落后', subtitle: '戒骄戒躁，永远保持谦逊学习的态度。\n——1956年中共八大开幕词' },
+                        { emoji: '🌸', title: '百花齐放，百家争鸣', subtitle: '艺术上不同形式和风格可以自由发展，科学上不同学派可以自由争论。\n——《关于正确处理人民内部矛盾的问题》1957年' },
+                        { emoji: '🪢', title: '团结—批评—团结', subtitle: '从团结的愿望出发，经过批评或者斗争，在新的基础上达到新的团结。\n——《关于正确处理人民内部矛盾的问题》1957年' },
+                        { emoji: '👁️', title: '没有正确的政治观点，就等于没有灵魂', subtitle: '思想政治工作是一切工作的生命线。\n——《关于正确处理人民内部矛盾的问题》1957年' },
+                        { emoji: '☀️', title: '青年如早晨八九点钟的太阳', subtitle: '世界是你们的，也是我们的，但归根结底是你们的。\n——1957年在莫斯科大学的讲话' },
+                        { emoji: '💪', title: '世界上怕就怕"认真"二字', subtitle: '共产党就最讲"认真"。\n——1957年在莫斯科大学的讲话' },
+                        { emoji: '🐎', title: '不是东风压倒西风，就是西风压倒东风', subtitle: '在路线问题上没有调和的余地。\n——1957年在莫斯科的讲话' },
+                        { emoji: '📄', title: '一张白纸，好写最新最美的文字', subtitle: '穷则思变，要干，要革命。\n——《介绍一个合作社》1958年' },
+                        { emoji: '🧊', title: '冷热结合', subtitle: '头脑要冷静，心肠要热，既要有革命热情又要有科学态度。\n——《工作方法六十条》1958年' },
+                        { emoji: '⛰️', title: '唯有牺牲多壮志，敢教日月换新天', subtitle: '革命英雄主义与改天换地的豪迈气概。\n——《七律·到韶山》1959年' },
+                        { emoji: '🍚', title: '手中有粮，心里不慌', subtitle: '物质基础是稳定人心的根本保障。\n——1959年提出的著名论断' },
+                        { emoji: '🏗️', title: '工、农、商、学、兵、政、党，党是领导一切的', subtitle: '领导我们事业的核心力量是中国共产党。\n——《在扩大的中央工作会议上的讲话》1962年' },
+                        { emoji: '⏰', title: '一万年太久，只争朝夕', subtitle: '抓住当下，分秒必争地去奋斗，不等不靠。\n——《满江红·和郭沫若同志》1963年' },
+                        { emoji: '🪨', title: '向雷锋同志学习', subtitle: '全心全意为人民服务的精神。\n——1963年题词' },
+                        { emoji: '🔬', title: '科学技术这一仗，一定要打，而且必须打好', subtitle: '不搞科学技术，生产力无法提高。\n——1963年听取科学技术工作规划汇报时讲话' },
+                        { emoji: '🚶', title: '雄关漫道真如铁，而今迈步从头越', subtitle: '面对严峻局势，保持从容不迫的战略定力。\n——《忆秦娥·娄山关》1935年' },
+                        { emoji: '🌪️', title: '与天奋斗，其乐无穷；与地奋斗，其乐无穷', subtitle: '大无畏的革命乐观主义精神。\n——青年时期的誓言' },
+                        { emoji: '💡', title: '错误常常是正确的先导', subtitle: '我们走过了许多弯路，但错误能帮助人头脑清醒。\n——《毛泽东文集》第8卷' },
+                        { emoji: '🌳', title: '十年树木，百年树人', subtitle: '培养人才是长久之计。\n——多次强调教育的重要性' },
+                        { emoji: '🇨🇳', title: '中国永远不称霸', subtitle: '我们坚决反对大国沙文主义。\n——关于对外政策的多次论述' },
+                        { emoji: '🏃', title: '发展体育运动，增强人民体质', subtitle: '身体是革命的本钱。\n——1952年为中华全国体育总会题词' },
+                        { emoji: '✍️', title: '好好学习，天天向上', subtitle: '最简单而又最深刻的求知之道。\n——为儿童节题词' },
+                        { emoji: '💪', title: '文明其精神，野蛮其体魄', subtitle: '全面发展的教育理念。\n——《体育之研究》1917年' },
+                        { emoji: '👂', title: '兼听则明，偏信则暗', subtitle: '有事和群众商量，听取各种不同意见。\n——长期倡导的工作作风' },
+                        { emoji: '🧭', title: '政治路线确定之后，干部就是决定的因素', subtitle: '必须善于识别干部，善于使用干部，善于爱护干部。\n——《中国共产党在民族战争中的地位》1938年' },
+                        { emoji: '🪜', title: '关心群众生活，注意工作方法', subtitle: '解决群众的柴米油盐问题，群众才会拥护我们。\n——《关心群众生活，注意工作方法》1934年' },
+                        { emoji: '📝', title: '没有满腔的热忱，没有眼睛向下的决心', subtitle: '没有求知的渴望，没有放下臭架子甘当小学生的精神，是一定不能做也做不好的。\n——《〈农村调查〉的序言和跋》1941年' },
+                        { emoji: '🧭', title: '一切空话都是无用的，必须给人民以看得见的物质福利', subtitle: '一切空话都是无用的，必须给人民以看得见的物质福利。\n——《经济问题与财政问题》1942年' },
+                        { emoji: '📰', title: '把思想战线统率起来', subtitle: '舆论阵地，无产阶级不去占领，资产阶级必然占领。\n——关于意识形态工作的论述' },
+                        { emoji: '🥢', title: '艰苦奋斗是我们的政治本色', subtitle: '根本的是我们要提倡艰苦奋斗，艰苦奋斗是我们的政治本色。\n——《艰苦奋斗是我们的政治本色》1956年' },
+                        { emoji: '🤝', title: '团结一切可以团结的力量', subtitle: '调动一切积极因素，团结一切可能团结的人，为建设社会主义社会这个伟大的事业服务。\n——《论十大关系》1956年' },
+                        { emoji: '🎨', title: '古为今用，洋为中用', subtitle: '向古人学习是为了现在的活人，向外国人学习是为了今天的中国人。\n——《毛泽东论文艺》' },
+                        { emoji: '🎓', title: '没有文化的军队是愚蠢的军队', subtitle: '而愚蠢的军队是不能战胜敌人的。\n——《文化工作中的统一战线》1944年' },
+                        { emoji: '⚖️', title: '自力更生为主，争取外援为辅', subtitle: '我们的方针要放在什么基点上？放在自己力量的基点上。\n——《抗日战争胜利后的时局和我们的方针》1945年' },
+                        { emoji: '🕊️', title: '友谊第一，比赛第二', subtitle: '重在参与与团结，超越纯粹的胜负。\n——关于体育外交的指示' },
+                        { emoji: '🔑', title: '依靠群众，相信群众', subtitle: '只要我们能够掌握马克思列宁主义的科学，相信群众，紧紧地和群众一道。\n——长期贯彻的思想' },
+                        { emoji: '🚪', title: '打开窗户透空气', subtitle: '广开言路，不要怕打开窗户可能吹进沙子来。\n——《毛泽东文集》第3卷' },
+                        { emoji: '💬', title: '要人家服，只能说服，不能压服', subtitle: '以力服人不行，对付敌人可以这样，对付同志和朋友绝不能用。\n——《毛泽东文集》第7卷' },
+                        { emoji: '🛡️', title: '人不犯我，我不犯人', subtitle: '人若犯我，我必犯人。\n——长期坚持的自卫原则' },
+                        { emoji: '👶', title: '青年人是早晨八九点钟的太阳', subtitle: '希望寄托在你们身上。\n——1957年在莫斯科大学的讲话' },
+                        { emoji: '🐜', title: '蚂蚁啃骨头', subtitle: '没有大机器，就用小机器，用蚂蚁啃骨头的办法。\n——关于自力更生发展工业的论述' },
+                        { emoji: '🌺', title: '妇女能顶半边天', subtitle: '时代不同了，男女都一样。\n——关于妇女解放的号召' },
+                        { emoji: '🦅', title: '可上九天揽月，可下五洋捉鳖', subtitle: '谈笑凯歌还。世上无难事，只要肯登攀。\n——《水调歌头·重上井冈山》1965年' },
+                        { emoji: '🍂', title: '扫帚不到，灰尘照例不会自己跑掉', subtitle: '世界上的事情，都是这样。\n——《抗日战争胜利后的时局和我们的方针》1945年' },
+                        { emoji: '🎯', title: '不懂就是不懂，不要装懂', subtitle: '不要摆官僚架子。\n——《论人民民主专政》1949年' },
+                        { emoji: '🌱', title: '新陈代谢是宇宙间普遍的永远不可抵抗的规律', subtitle: '依事物本身的性质和条件，经过不同的飞跃形式，一事物转化为他事物。\n——《矛盾论》1937年' },
+                        { emoji: '💪', title: '世上无难事，只要肯登攀', subtitle: '只要肯下功夫，任何困难都能克服。\n——《水调歌头·重上井冈山》1965年' },
+                        { emoji: '👁️', title: '不但要看干部的一时一事，而且要看干部的全部历史和全部工作', subtitle: '这是识别干部的主要方法。\n——《中国共产党在民族战争中的地位》1938年' },
+                    ]
+                },
+            
+                // ==================== 2. 易经 ====================
+                '易经': {
+                    name: '易经',
+                    description: '群经之首 · 大道之源 · 变易之道',
+                    icon: '☯',
+                    cards: [
+                        { emoji: '☰', title: '乾为天', subtitle: '元，亨，利，贞。\n白话：刚健有力，宜开创进取，忌急躁冒进，守正可通达。' },
+                        { emoji: '☷', title: '坤为地', subtitle: '元亨，利牝马之贞。\n白话：包容厚德，宜守成辅助，忌过度妥协，需坚守原则。' },
+                        { emoji: '⛰️', title: '水雷屯', subtitle: '元亨利贞，勿用有攸往，利建侯。\n白话：万事开头难，创业初期宜稳忌冒进，需借力合作。' },
+                        { emoji: '🌫️', title: '山水蒙', subtitle: '亨。匪我求童蒙，童蒙求我。\n白话：启蒙与学习，空杯心态进步快，拒绝诱惑不贪捷径。' },
+                        { emoji: '🌧️', title: '水天需', subtitle: '有孚，光亨，贞吉，利涉大川。\n白话：等待的智慧，目标未达耐心蛰伏，时机成熟享成果。' },
+                        { emoji: '⚖️', title: '天水讼', subtitle: '有孚窒惕，中吉，终凶。\n白话：易起争执，宜调解忌硬刚，纠缠到底必损双方。' },
+                        { emoji: '🛡️', title: '地水师', subtitle: '贞，丈人吉，无咎。\n白话：团队作战需上下团结，做事先立规则，领导者需正直果断。' },
+                        { emoji: '🤝', title: '水地比', subtitle: '吉。原筮，元永贞，无咎。\n白话：亲附和合，以诚相待聚人心，忌分裂内耗。' },
+                        { emoji: '💨', title: '风天小畜', subtitle: '亨，密云不雨，自我西郊。\n白话：小积蓄成就大能量，宜沉淀积累，忌急于求成。' },
+                        { emoji: '👣', title: '天泽履', subtitle: '履虎尾，不咥人，亨。\n白话：如履薄冰，需小心谨慎，稳扎稳打方能无险。' },
+                        { emoji: '☀️', title: '地天泰', subtitle: '小往大来，吉亨。\n白话：阴阳交泰万事顺遂，珍惜顺境，忌得意忘形。' },
+                        { emoji: '🚫', title: '天地否', subtitle: '否之匪人，不利君子贞，大往小来。\n白话：天地阻隔关系闭塞，需主动打破僵局，忌消极等待。' },
+                        { emoji: '🔥', title: '天火同人', subtitle: '同人于野，亨，利涉大川。\n白话：志同道合者相聚，适合团队合作，人心齐则万事顺。' },
+                        { emoji: '🌾', title: '火天大有', subtitle: '元亨。\n白话：丰收富有，大获所有，宜分享成果忌独享贪占。' },
+                        { emoji: '🏔️', title: '地山谦', subtitle: '亨，君子有终。\n白话：谦虚低调反得贵人扶持，锋芒内敛方能长久。' },
+                        { emoji: '🎵', title: '雷地豫', subtitle: '利建侯行师。\n白话：团队充满活力，宜凝聚人心顺势而为，忌懈怠沉溺。' },
+                        { emoji: '🔄', title: '泽雷随', subtitle: '元亨利贞，无咎。\n白话：顺势跟随，灵活应变不强求，择善而从可获吉。' },
+                        { emoji: '🐛', title: '山风蛊', subtitle: '元亨，利涉大川。先甲三日，后甲三日。\n白话：整治弊病拨乱反正，直面问题挽救危局。' },
+                        { emoji: '👁️', title: '地泽临', subtitle: '元亨，利贞，八月有凶。\n白话：形势有利但暗藏危机，忌骄傲自满，需居安思危。' },
+                        { emoji: '🔭', title: '风地观', subtitle: '盥而不荐，有孚颙若。\n白话：宜静观形势审视自我再行动，忌盲目决策。' },
+                        { emoji: '⚡', title: '火雷噬嗑', subtitle: '亨，利用狱。\n白话：咬合清除障碍，执法公正果断，以法治达亨通。' },
+                        { emoji: '🎨', title: '山火贲', subtitle: '亨，小利有攸往。\n白话：文饰美化适可而止，重实质轻外表，修内方能致远。' },
+                        { emoji: '⛰️', title: '山地剥', subtitle: '不利有攸往。\n白话：阴盛阳衰小人当道，宜退守待机，忌冒进强出头。' },
+                        { emoji: '🌅', title: '地雷复', subtitle: '亨，出入无疾，朋来无咎。\n白话：低谷后生机重现，失败乃成功之母，可东山再起。' },
+                        { emoji: '🌿', title: '天雷无妄', subtitle: '元亨，利贞。\n白话：不妄为不妄想，行事谨慎守正，妄动易招灾祸。' },
+                        { emoji: '⛰️', title: '山天大畜', subtitle: '利贞，不家食吉，利涉大川。\n白话：积蓄力量待机而发，厚积薄发方可成大事。' },
+                        { emoji: '🍽️', title: '山雷颐', subtitle: '贞吉。观颐，自求口实。\n白话：颐养之道靠自己，自力更生养正气，忌贪求他人。' },
+                        { emoji: '🌪️', title: '泽风大过', subtitle: '栋桡，利有攸往，亨。\n白话：非常时期须非常手段，力挽狂澜扭转危局。' },
+                        { emoji: '💧', title: '水洊至习坎', subtitle: '有孚维心，亨，行有尚。\n白话：重重险阻中持守诚信，内心坚定可化险为夷。' },
+                        { emoji: '🔥', title: '离为火', subtitle: '利贞，亨。畜牝牛吉。\n白话：依附光明持守中正，柔顺谦逊可获吉祥。' },
+                        { emoji: '💞', title: '泽山咸', subtitle: '亨，利贞，取女吉。\n白话：男女感应交心，真诚相待以情动人，忌虚情假意。' },
+                        { emoji: '🕰️', title: '雷风恒', subtitle: '亨，无咎，利贞，利有攸往。\n白话：持久稳定之道，宜长期经营守常不变，忌三心二意。' },
+                        { emoji: '🏃', title: '天山遁', subtitle: '亨，小利贞。\n白话：时机未成熟宜退避蓄势，小事守正可保平安。' },
+                        { emoji: '💪', title: '雷天大壮', subtitle: '利贞。\n白话：气势强盛宜攻坚突破，忌鲁莽冒进，守正则亨通。' },
+                        { emoji: '🌄', title: '火地晋', subtitle: '康侯用锡马蕃庶，昼日三接。\n白话：晋升前进光明，得赏识重用，宜修德以配其位。' },
+                        { emoji: '🌑', title: '地火明夷', subtitle: '利艰贞。\n白话：光明暂隐身处困境，需守正待机韬光养晦，勿轻举妄动。' },
+                        { emoji: '👨‍👩‍👧‍👦', title: '风火家人', subtitle: '利女贞。\n白话：家庭团队需团结如家人，女性角色尤为重要，家和万事兴。' },
+                        { emoji: '🔥', title: '火泽睽', subtitle: '小事吉。\n白话：分歧背离求同存异，小事可成大事难合，宜异中求和。' },
+                        { emoji: '🚧', title: '水山蹇', subtitle: '利西南，不利东北。利见大人，贞吉。\n白话：前进艰难宜退守待援，知难而暂止反得吉祥。' },
+                        { emoji: '⛈️', title: '雷水解', subtitle: '利西南，无所往，其来复吉。\n白话：困难迎刃而解，把握时机顺势而为，可破局脱困。' },
+                        { emoji: '➖', title: '山泽损', subtitle: '有孚，元吉，无咎，可贞，利有攸往。\n白话：损下益上减省有道，诚信为本，损己利人终获吉。' },
+                        { emoji: '➕', title: '风雷益', subtitle: '利有攸往，利涉大川。\n白话：增益互利共赢，资源互补互助可成就大事。' },
+                        { emoji: '🌊', title: '泽天夬', subtitle: '扬于王庭，孚号有厉。\n白话：决断果断除小人，光明正大处理，忌优柔寡断养痈遗患。' },
+                        { emoji: '💑', title: '天风姤', subtitle: '女壮，勿用取女。\n白话：不期而遇须警惕，小人与烂桃花防微杜渐，忌贪一时之欢。' },
+                        { emoji: '👥', title: '泽地萃', subtitle: '亨，王假有庙。利见大人，亨，利贞。\n白话：精英荟萃聚人心，团结一致可干大事，忌内部分裂。' },
+                        { emoji: '📈', title: '地风升', subtitle: '元亨，用见大人，勿恤。\n白话：循序渐进宜提升自我，得贵人相助可稳步上升。' },
+                        { emoji: '🪤', title: '泽水困', subtitle: '亨，贞，大人吉，无咎。\n白话：困境中坚守正道，忍辱负重自有转机，忌怨天尤人。' },
+                        { emoji: '🕳️', title: '水风井', subtitle: '改邑不改井，无丧无得，往来井井。\n白话：资源奉献不变根本，修井养民共享资源获福。' },
+                        { emoji: '♻️', title: '泽火革', subtitle: '己日乃孚，元亨利贞，悔亡。\n白话：变革创新择时而动，时机成熟则革故鼎新。' },
+                        { emoji: '🍲', title: '火风鼎', subtitle: '元吉，亨。\n白话：鼎立新制稳固根基，用人得当制度完善方可长久。' },
+                        { emoji: '⚡', title: '震为雷', subtitle: '亨。震来虩虩，笑言哑哑。\n白话：变动剧烈如惊雷，需快速反应保持镇定，危机中暗藏机遇。' },
+                        { emoji: '⛰️', title: '艮为山', subtitle: '艮其背，不获其身；行其庭，不见其人。\n白话：当止则止知足不辱，心念不动如山方无咎害。' },
+                        { emoji: '🌳', title: '风山渐', subtitle: '女归吉，利贞。\n白话：循序渐进稳扎稳打，忌急于求成，如婚嫁需慢慢来。' },
+                        { emoji: '💒', title: '雷泽归妹', subtitle: '征凶，无攸利。\n白话：婚嫁合作需真诚对应，盲目冲动易招祸，宜谨慎对待。' },
+                        { emoji: '🌕', title: '雷火丰', subtitle: '亨，王假之，勿忧，宜日中。\n白话：表面繁荣须防暗藏风险，盛极防衰，宜守中道忌贪多求快。' },
+                        { emoji: '🧳', title: '火山旅', subtitle: '小亨，旅贞吉。\n白话：行旅在外客居之象，柔弱顺处方可小亨，宜守正忌招摇。' },
+                        { emoji: '🌬️', title: '巽为风', subtitle: '小亨，利有攸往，利见大人。\n白话：柔顺谦逊如风渗透，灵活应变深入人心，忌刚愎自用。' },
+                        { emoji: '😊', title: '兑为泽', subtitle: '亨，利贞。\n白话：和悦相处共享喜悦，以诚相待利人际关系，忌巧言令色。' },
+                        { emoji: '🌊', title: '风水涣', subtitle: '亨，王假有庙，利涉大川。\n白话：防关系或事业涣散，需凝聚人心明确目标方可渡险。' },
+                        { emoji: '📏', title: '水泽节', subtitle: '亨。苦节不可贞。\n白话：节制有度适可而止，过犹不及以中道为贵。' },
+                        { emoji: '🕊️', title: '风泽中孚', subtitle: '豚鱼吉，利涉大川，利贞。\n白话：诚信为本守承诺可获信任，宜正心正念方能致远。' },
+                        { emoji: '🐦', title: '雷山小过', subtitle: '亨，利贞，可小事不可大事。\n白话：小失误可包容大事需谨慎，避免因小失大，宜低调收敛。' },
+                        { emoji: '✅', title: '水火既济', subtitle: '亨小，利贞。初吉终乱。\n白话：事成圆满居安思危，成功后更需谨慎守成防逆转。' },
+                        { emoji: '❌', title: '火水未济', subtitle: '亨。小狐汔济，濡其尾，无攸利。\n白话：事尚未成不可躁进，持之以恒终能成功，忌半途而废。' },
+                    ]
+                },
+            
+                // ==================== 3. 道德经 ====================
+                '道德经': {
+                    name: '道德经',
+                    description: '道法自然 · 无为而治 · 上善若水',
+                    icon: '☯️',
+                    cards: [
+                        { emoji: '🚶', title: '道可道，非常道', subtitle: '道可道，非常道；名可名，非常名。\n白话：能说出来的道就不是永恒的道，真正的智慧超越语言，要用心去体悟。' },
+                        { emoji: '⚖️', title: '天下皆知美之为美', subtitle: '天下皆知美之为美，斯恶已；皆知善之为善，斯不善已。\n白话：美丑善恶是相对的，执着于分别反而产生对立，顺其自然才是真智慧。' },
+                        { emoji: '🎯', title: '不尚贤，使民不争', subtitle: '不贵难得之货，使民不为盗；不见可欲，使民心不乱。\n白话：不标榜贤能名号，百姓就不争；不抬高稀罕物价，百姓就不偷；不炫耀欲望，民心就不乱。' },
+                        { emoji: '🏺', title: '道冲而用之或不盈', subtitle: '渊兮似万物之宗。挫其锐，解其纷，和其光，同其尘。\n白话：道看似空虚却用不完，深沉得像万物的本源。收敛锋芒、消解纷扰、含敛光耀、混同尘世。' },
+                        { emoji: '🪆', title: '天地不仁，以万物为刍狗', subtitle: '圣人不仁，以百姓为刍狗。\n白话：天地不偏私，任凭万物自生自灭；圣人也不偏私，任凭百姓自作自息。不干涉就是最大的仁。' },
+                        { emoji: '🌊', title: '谷神不死，是谓玄牝', subtitle: '玄牝之门，是谓天地根。绵绵若存，用之不勤。\n白话：虚空永存就是玄妙的母性，天地万物的根源在这里，连绵不绝，用也用不完。' },
+                        { emoji: '⏳', title: '天长地久', subtitle: '天地所以能长且久者，以其不自生，故能长生。\n白话：天地能长久是因为不为自己而生。不自私反而能长久，成就别人的同时也成就了自己。' },
+                        { emoji: '💧', title: '上善若水', subtitle: '水善利万物而不争，处众人之所恶，故几于道。\n白话：最高境界的善像水一样，滋养万物却不争功，甘居低处，最接近道。' },
+                        { emoji: '🍵', title: '持而盈之，不如其已', subtitle: '揣而锐之，不可长保。金玉满堂，莫之能守。富贵而骄，自遗其咎。\n白话：水满了不如停手，刀太锋利容易缺口。金玉满堂守不住，富贵了还骄傲就是自取祸患。功成身退才合乎天道。' },
+                        { emoji: '👶', title: '专气致柔，能如婴儿乎', subtitle: '载营魄抱一，能无离乎？\n白话：让身体和灵魂合一不分离，让气息柔顺得像婴儿。回归纯真才是修养的最高境界。' },
+                        { emoji: '🪟', title: '有之以为利，无之以为用', subtitle: '三十辐共一毂，当其无，有车之用。埏埴以为器，当其无，有器之用。\n白话：车轮因为中空才能转动，陶器因为中空才能盛物。有形的部分只是便利，无形的空间才是价值所在。' },
+                        { emoji: '😵', title: '五色令人目盲', subtitle: '五音令人耳聋，五味令人口爽。驰骋畋猎令人心发狂。\n白话：过分追求感官刺激反而失去真正的感知力。简朴生活让心灵更敏锐，少即是多。' },
+                        { emoji: '😱', title: '宠辱若惊，贵大患若身', subtitle: '何谓宠辱若惊？宠为下，得之若惊，失之若惊。\n白话：受宠和受辱都像受到惊吓一样。太看重名利就像太看重身体一样，反而是痛苦的根源。' },
+                        { emoji: '👻', title: '视之不见名曰夷，听之不闻名曰希', subtitle: '搏之不得名曰微。此三者不可致诘，故混而为一。\n白话：道看不见听不到摸不着，三者混为一体无法追问。这就是形而上的存在。' },
+                        { emoji: '🌿', title: '致虚极，守静笃', subtitle: '万物并作，吾以观复。夫物芸芸，各复归其根。\n白话：让心回归彻底的虚静，才能看清万物循环往复的根本规律。喧嚣过后终归宁静。' },
+                        { emoji: '👑', title: '太上，下知有之', subtitle: '其次亲而誉之，其次畏之，其次侮之。信不足焉，有不信焉。\n白话：最好的管理者百姓只感到他的存在，次一等被尊敬，再次一等被畏惧，最次的被蔑视。最高境界是无声掌舵。' },
+                        { emoji: '📜', title: '大道废，有仁义', subtitle: '智慧出，有大伪。六亲不和，有孝慈。国家昏乱，有忠臣。\n白话：大道废弃了才提倡仁义，智慧出现了才滋生虚伪。家庭不睦才强调孝慈，国家混乱才出现忠臣。越缺什么越喊什么。' },
+                        { emoji: '🐂', title: '绝圣弃智，民利百倍', subtitle: '绝仁弃义，民复孝慈；绝巧弃利，盗贼无有。\n白话：抛弃过度的聪明技巧，人民反而能得到更多实在的好处。简单比复杂更有力量。' },
+                        { emoji: '😔', title: '绝学无忧', subtitle: '唯之与阿，相去几何？善之与恶，相去若何？\n白话：应诺和呵斥能差多少？美善和丑恶能差多少？众人畏惧的不能不畏惧。去掉杂乱学问反而不忧愁。' },
+                        { emoji: '🤷', title: '我独异于人，而贵食母', subtitle: '众人熙熙如享太牢如春登台，我独泊兮其未兆如婴儿之未孩。\n白话：众人热闹我独安静，像婴儿还没长大。别人光鲜亮丽我独自昏昏默默。我独与道同行。' },
+                        { emoji: '🌌', title: '孔德之容，惟道是从', subtitle: '道之为物，惟恍惟惚。惚兮恍兮其中有象，恍兮惚兮其中有物。\n白话：大德的表现完全跟随着道。道这个东西恍恍惚惚，但恍惚中有形象有实物，有精微有真实。' },
+                        { emoji: '🌀', title: '曲则全，枉则直', subtitle: '洼则盈，敝则新，少则得，多则惑。\n白话：委曲反而能保全，低洼反而能充盈，少取反而能多获，贪多反而困惑。不必处处争强。' },
+                        { emoji: '🤫', title: '希言自然', subtitle: '飘风不终朝，骤雨不终日。孰为此者？天地。天地尚不能久，而况于人乎？\n白话：狂风暴雨持续不了一整天，何况人呢？少说多做合乎自然，风雨总会过去。' },
+                        { emoji: '🧍', title: '企者不立，跨者不行', subtitle: '自见者不明，自是者不彰，自伐者无功，自矜者不长。\n白话：踮着脚站不稳跳着走走不远，自负逞强的人恰恰暴露虚弱。自我炫耀反而黯淡。' },
+                        { emoji: '🐣', title: '有物混成，先天地生', subtitle: '寂兮寥兮，独立而不改，周行而不殆，可以为天下母。吾不知其名，字之曰道。\n白话：有个浑然一体的东西比天地还早，寂静空虚独立永恒循环不息。我给不起名字，叫它"道"吧。' },
+                        { emoji: '⚓', title: '重为轻根，静为躁君', subtitle: '是以君子终日行不离辎重。虽有荣观，燕处超然。\n白话：稳重是轻浮的根基，冷静是躁动的主宰。君子整天走路都不离开载重的车。处境再华丽也淡然处之。' },
+                        { emoji: '🗝️', title: '善行无辙迹，善言无瑕谪', subtitle: '善数不用筹策，善闭无关楗而不可开，善结无绳约而不可解。\n白话：善于行动的人不留痕迹，善于说话的人没有破绽。最高明的办法不用工具也不可解开。' },
+                        { emoji: '👶', title: '知其雄，守其雌，为天下谿', subtitle: '为天下谿，常德不离，复归于婴儿。\n白话：知道刚强却安守柔弱，做天下的溪谷。永恒的德就不会离身，回归婴儿般的纯真。' },
+                        { emoji: '🚫', title: '将欲取天下而为之，吾见其不得已', subtitle: '天下神器，不可为也，不可执也。为者败之，执者失之。\n白话：用强力来治理天下是不可能的。天下是神圣的东西，不能强行作为，越控制越失去。' },
+                        { emoji: '⚔️', title: '以道佐人主者，不以兵强天下', subtitle: '其事好还。师之所处荆棘生焉，大军之后必有凶年。\n白话：用道辅佐君主的人不靠兵力逞强。用兵会遭报应，战乱过后荆棘遍野必有荒年。' },
+                        { emoji: '🗡️', title: '兵者不祥之器，非君子之器', subtitle: '不得已而用之，恬淡为上。胜而不美，而美之者是乐杀人。\n白话：兵器是不祥的东西，不到万不得已不用。打了胜仗也不庆祝，庆祝胜利等于以杀人为乐。' },
+                        { emoji: '🌊', title: '知人者智，自知者明', subtitle: '胜人者有力，自胜者强。知足者富，强行者有志。\n白话：了解别人是聪明，看清自己才是智慧。战胜别人是有力，战胜自己才是强大。知足才是真正的富有。' },
+                        { emoji: '🌍', title: '大道泛兮，其可左右', subtitle: '万物恃之以生而不辞，功成而不有。衣养万物而不为主，可名于小。\n白话：大道像江河一样无处不在，养育万物却不占有不主宰。最伟大的东西往往最渺小最平凡。' },
+                        { emoji: '🎵', title: '执大象，天下往', subtitle: '往而不害，安平太。乐与饵，过客止。道之出口淡乎其无味。\n白话：守住大道天下人都会来归附，不伤害，平安康泰。音乐和美食让过客停步，道说出口却平淡无味。' },
+                        { emoji: '🐟', title: '将欲歙之，必固张之', subtitle: '将欲弱之，必固强之；将欲废之，必固兴之；将欲取之，必固与之。\n白话：想要收敛不妨先让它张开。物极必反，柔弱胜过刚强的智慧。这是微妙的道理。' },
+                        { emoji: '🌊', title: '道常无为而无不为', subtitle: '侯王若能守之，万物将自化。化而欲作，吾将镇之以无名之朴。\n白话：道永远顺其自然却无所不成就。王侯能守住道万物会自我化育。欲望冒出来就用道的质朴来镇服它。' },
+                        { emoji: '🌸', title: '上德不德，是以有德', subtitle: '下德不失德，是以无德。上德无为而无以为，下德无为而有以为。\n白话：真正的德不标榜德行所以真有德，低层次的德总表现有德其实没德。最高的德顺其自然不为什么。' },
+                        { emoji: '1️⃣', title: '昔之得一者：天得一以清', subtitle: '地得一以宁，神得一以灵，谷得一以盈，万物得一以生。\n白话：自古得到"一"的：天得道而清明，地得道而宁静，万物得道而生长。一就是道的整体性。' },
+                        { emoji: '🔄', title: '反者道之动，弱者道之用', subtitle: '天下万物生于有，有生于无。\n白话：循环往复是道的运动方式，柔弱是道的作用方式。天下万物从有形生，有从无生。后退有时是为了前进。' },
+                        { emoji: '😂', title: '上士闻道，勤而行之', subtitle: '中士闻道，若存若亡；下士闻道，大笑之。不笑不足以为道。\n白话：上等人听了道努力践行，中等人半信半疑，下等人哈哈大笑。不被嘲笑反而不是真道了。' },
+                        { emoji: '💡', title: '明道若昧，进道若退', subtitle: '夷道若颣，上德若谷，大白若辱，广德若不足。\n白话：光明的道好像暗昧，前进的道好像后退。真正的伟大看起来平凡，最洁白的好像有污点。大道反常理。' },
+                        { emoji: '🌱', title: '道生一，一生二', subtitle: '二生三，三生万物。万物负阴而抱阳，冲气以为和。\n白话：万物都由简单到复杂演化而来，阴阳相互激荡达到和谐。这就是宇宙生成的过程。' },
+                        { emoji: '👂', title: '不言之教，无为之益', subtitle: '天下希及之。\n白话：不用言语的教化，顺应自然的益处，天下很少有人能做到。潜移默化胜过说教千遍。' },
+                        { emoji: '💭', title: '名与身孰亲？身与货孰多？', subtitle: '得与亡孰病？甚爱必大费，多藏必厚亡。\n白话：名声和生命哪个更亲？生命和财产哪个更重？知道满足就不会受辱，知道适可而止就不会有危险。' },
+                        { emoji: '✅', title: '大成若缺，其用不弊', subtitle: '大盈若冲，其用不穷。大直若屈，大巧若拙，大辩若讷。\n白话：最大的成就好像有缺陷但用不完，最满的反而空虚但用不尽。最直的好像弯曲，最巧的好像笨拙。' },
+                        { emoji: '☀️', title: '天下有道，却走马以粪', subtitle: '天下无道，戎马生于郊。祸莫大于不知足，咎莫大于欲得。\n白话：天下太平战马用来耕田，天下大乱母马在野外生驹。最大的祸患是贪得无厌不知满足。' },
+                        { emoji: '🔮', title: '不出户，知天下', subtitle: '不窥牖，见天道。其出弥远，其知弥少。\n白话：不走出门也能知天下事，不望窗外也能见天道。向外求索越远离真知反而越远。心静万事明。' },
+                        { emoji: '📚', title: '为学日益，为道日损', subtitle: '损之又损，以至于无为。无为而无不为。\n白话：求学问是越学越多，修道是越减越少。减到无可再减就达到无为境界，无为反而无所不成就。' },
+                        { emoji: '💗', title: '圣人常无心，以百姓心为心', subtitle: '善者吾善之，不善者吾亦善之，德善。信者吾信之，不信者吾亦信之，德信。\n白话：圣人没有私心以百姓的心愿为己心。对谁都善意相待，对谁都保持信任。这才是真正的大德。' },
+                        { emoji: '🌬️', title: '出生入死', subtitle: '生之徒十有三，死之徒十有三，人之生动之于死地亦十有三。夫何故？以其生生之厚。\n白话：长寿的占三分一，短命的占三分一，自寻死路的占三分一。过分养生反而害命。自然就好。' },
+                        { emoji: '🌰', title: '道生之，德畜之', subtitle: '物形之，势成之。是以万物莫不尊道而贵德。道之尊德之贵，夫莫之命而常自然。\n白话：道生成万物，德养育万物。道和德之所以尊贵，就在于不干涉万物而让其顺其自然。' },
+                        { emoji: '👩‍👧', title: '天下有始，以为天下母', subtitle: '既得其母，以知其子；既知其子，复守其母，没身不殆。\n白话：天下万物都有本始，这就是"母亲"。知道孩子（万物）就回来守住母亲（道），终身没有危险。' },
+                        { emoji: '👀', title: '使我介然有知，行于大道', subtitle: '唯施是畏。大道甚夷而人好径。朝甚除田甚芜仓甚虚，服文彩带利剑厌饮食，是谓盗夸。\n白话：我稍微有点知识就走在大道上，只怕走入邪路。大道很平坦但人总喜欢抄小径。那些炫耀浮华的其实是大盗。' },
+                        { emoji: '🌳', title: '善建者不拔，善抱者不脱', subtitle: '子孙以祭祀不辍。修之于身其德乃真，修之于家其德乃余。\n白话：善于建树功德的不会轻易动摇，善于抱持道德的不会轻易脱离。修养从自身开始，德就会越来越广。' },
+                        { emoji: '🐣', title: '含德之厚，比于赤子', subtitle: '毒虫不螫，猛兽不据，攫鸟不搏。骨弱筋柔而握固。\n白话：德行深厚的人像初生的婴儿，毒虫不叮猛兽不伤。柔弱的婴儿却拳头紧握，这是元气充沛的境界。' },
+                        { emoji: '🤐', title: '知者不言，言者不知', subtitle: '塞其兑闭其门，挫其锐解其纷，和其光同其尘，是谓玄同。\n白话：真正懂的人不多说，夸夸其谈的人并不懂。关闭感官欲望，收敛锋芒，混同尘世，就是与道一体。' },
+                        { emoji: '🗡️', title: '以正治国，以奇用兵', subtitle: '以无事取天下。天下多忌讳而民弥贫，民多利器国家滋昏。\n白话：用正道治国用奇谋用兵用不扰民取得天下。禁令越多人民越穷，武器越多国家越乱。无为才能治。' },
+                        { emoji: '🧘', title: '其政闷闷，其民淳淳', subtitle: '其政察察，其民缺缺。祸兮福之所倚，福兮祸之所伏。\n白话：政治宽厚人民就淳朴，政治严苛人民就狡诈。祸福互相依存转化，谁能知道极限在哪？守中道不偏激。' },
+                        { emoji: '🐟', title: '治大国若烹小鲜', subtitle: '以道莅天下，其鬼不神。非其鬼不神，其神不伤人。\n白话：治理大国像煎小鱼一样不能总翻动不能折腾百姓。以道临天下连鬼神都不起作用，这是最好的状态。' },
+                        { emoji: '🌊', title: '大国者下流，天下之交', subtitle: '天下之牝，牝常以静胜牡，以静为下。\n白话：大国应像江河处在低处才能汇聚天下。雌性常以安静胜过雄性，静能制动柔能克刚。' },
+                        { emoji: '🧭', title: '道者万物之奥', subtitle: '善人之宝，不善人之所保。美言可以市尊，美行可以加人。\n白话：道是万物的奥妙所在，善人的珍宝不善人的庇护所。美言可以换尊重，美行可以感染人。' },
+                        { emoji: '🔨', title: '为无为，事无事，味无味', subtitle: '大小多少，报怨以德。图难于其易，为大于其细。\n白话：以无为来作为以无事来做事，把怨怼用恩德回报。想克服困难从容易处下手，想成就大事从小处做起。' },
+                        { emoji: '🪴', title: '其安易持，其未兆易谋', subtitle: '其脆易泮，其微易散。为之于未有，治之于未乱。\n白话：安稳时容易把握未显时容易谋划。事情在还没发生时做，治乱在还没乱时处理。防患于未然。' },
+                        { emoji: '🧘', title: '江海所以能为百谷王者', subtitle: '以其善下之，故能为百谷王。\n白话：江海因为甘愿处在低处才汇聚百川。谦卑处下反而能成为领袖。不争之争才是大争。' },
+                        { emoji: '🧭', title: '我有三宝，持而保之', subtitle: '一曰慈，二曰俭，三曰不敢为天下先。慈故能勇，俭故能广，不敢为天下先故能成器长。\n白话：人生三样法宝：慈悲、节俭、不争强好胜。慈悲生出勇，节俭生出广，不争反成领袖。' },
+                        { emoji: '🤼', title: '善为士者不武，善战者不怒', subtitle: '善胜敌者不与，善用人者为之下。是谓不争之德，是谓用人之力。\n白话：好统帅不逞勇斗狠，善战者不动怒，善胜者不正面交锋。不争的德行，用人的智慧。' },
+                        { emoji: '💭', title: '吾言甚易知甚易行', subtitle: '天下莫能知莫能行。言有宗事有君。夫唯无知，是以不我知。\n白话：我的话很简单易懂可世人就是做不到。知易行难，被褐怀玉。怀揣宝玉却穿着粗布衣，人不可貌相。' },
+                        { emoji: '🛡️', title: '知不知，尚矣', subtitle: '不知知，病也。圣人不病，以其病病。夫唯病病，是以不病。\n白话：知道自己的无知是最高境界，不懂装懂才是毛病。圣人把毛病当毛病所以没毛病。' },
+                        { emoji: '😨', title: '民不畏威，则大威至', subtitle: '无狎其所居，无厌其所生。夫唯不厌，是以不厌。\n白话：当人民不再畏惧威权时大祸就来了。不要压迫生存空间，不要堵塞生计。不自以为是才是真明白。' },
+                        { emoji: '✖️', title: '天网恢恢，疏而不失', subtitle: '勇于敢则杀，勇于不敢则活。此两者或利或害。天之所恶孰知其故？\n白话：天道像一张大网虽然稀疏却从不漏过。大胆妄为者自取灭亡，谨慎不妄动者能保全。天网恢恢疏而不漏。' },
+                        { emoji: '💀', title: '民不畏死，奈何以死惧之', subtitle: '若使民常畏死，而为奇者吾得执而杀之，孰敢？常有司杀者杀。\n白话：人民不怕死拿死来威胁有什么用？若人民怕死那极少数的捣乱者杀了就是。代替刽子手杀人的好比代替木匠砍木头，必伤己手。' },
+                        { emoji: '🍞', title: '民之饥，以其上食税之多', subtitle: '是以饥。民之难治，以其上之有为，是以难治。民之轻死，以其上求生之厚。\n白话：人民挨饿因为上面税收太重，人民难治因为上面折腾太多，人民不怕死因为上面生活太奢侈。' },
+                        { emoji: '🍃', title: '人之生也柔弱，其死也坚强', subtitle: '草木之生也柔脆，其死也枯槁。故坚强者死之徒，柔弱者生之徒。\n白话：活着时身体柔软死了才僵硬。柔韧是生的状态，刚硬是死的前兆。不要再迷信强硬了。' },
+                        { emoji: '🎯', title: '天之道，损有余而补不足', subtitle: '人之道则不然，损不足以奉有余。孰能有余以奉天下？唯有道者。\n白话：天道是减多余补不足，人道却相反抢夺穷人供奉富人。谁能把有余分给大家？只有得道的人。' },
+                        { emoji: '💧', title: '天下莫柔弱于水', subtitle: '而攻坚强者莫之能胜，以其无以易之。弱之胜强，柔之胜刚，天下莫不知莫能行。\n白话：水是天下最柔弱的，但滴水能穿石。柔能克刚道理谁都知道，却没几人能做到。' },
+                        { emoji: '🤝', title: '和大怨必有余怨', subtitle: '是以圣人执左契而不责于人。有德司契，无德司彻。天道无亲常与善人。\n白话：结下大怨即使和解也留疤。圣人拿着借据却不向人讨债。天道没有亲疏永远与善良者同在。' },
+                        { emoji: '🏡', title: '小国寡民', subtitle: '甘其食美其服安其居乐其俗。邻国相望鸡犬之声相闻，民至老死不相往来。\n白话：理想生活是简小知足，吃得香穿得暖住得安，不羡慕不比较不和别人攀比。简单才是神仙日子。' },
+                        { emoji: '🗣️', title: '信言不美，美言不信', subtitle: '善者不辩，辩者不善。知者不博，博者不知。\n白话：可信的话不花哨花哨的不一定可信。真话往往朴实，巧言往往另有目的。大道至简。' },
+                        { emoji: '📦', title: '圣人不积', subtitle: '既以为人己愈有，既以与人己愈多。天之道利而不害，圣人之道为而不争。\n白话：圣人不囤积，越帮别人自己越丰盛，越分给别人自己越多。天道利万物而不害，圣人之道做而不争。' },
+                    ]
+                },
             };
-            const emojiColorMap = {
-                '🔥': { theme: { r: 210, g: 55, b: 30 }, cardBg: { r: 255, g: 242, b: 237 } },
-                '📋': { theme: { r: 70, g: 105, b: 140 }, cardBg: { r: 238, g: 245, b: 252 } },
-                '🐯': { theme: { r: 205, g: 135, b: 40 }, cardBg: { r: 255, g: 248, b: 232 } },
-                '🎯': { theme: { r: 185, g: 35, b: 35 }, cardBg: { r: 255, g: 238, b: 238 } },
-                '🤝': { theme: { r: 55, g: 125, b: 95 }, cardBg: { r: 237, g: 252, b: 244 } },
-                '🌾': { theme: { r: 155, g: 130, b: 60 }, cardBg: { r: 255, g: 251, b: 238 } },
-                '♟️': { theme: { r: 65, g: 65, b: 75 }, cardBg: { r: 242, g: 242, b: 246 } },
-                '🔍': { theme: { r: 45, g: 85, b: 140 }, cardBg: { r: 236, g: 244, b: 255 } },
-                '🏔️': { theme: { r: 90, g: 120, b: 140 }, cardBg: { r: 240, g: 246, b: 250 } },
-                '⏰': { theme: { r: 175, g: 115, b: 55 }, cardBg: { r: 255, g: 245, b: 235 } },
-                '👥': { theme: { r: 115, g: 70, b: 125 }, cardBg: { r: 248, g: 242, b: 252 } },
-                '⚔️': { theme: { r: 145, g: 55, b: 45 }, cardBg: { r: 255, g: 240, b: 238 } }
-            };
+            let BOOK2 = {};
+            let BOOK3 = {};
 
-            const cards = [
-                { emoji: '🔥', title: '星星之火，可以燎原', subtitle: '革命力量虽小，但发展壮大是必然趋势。\n——《星星之火，可以燎原》1930年' },
-                { emoji: '📋', title: '没有调查，就没有发言权', subtitle: '一切结论产生于调查情况的末尾，而不是先头。\n——《反对本本主义》1930年' },
-                { emoji: '🐯', title: '一切反动派都是纸老虎', subtitle: '看起来可怕，实际上经不起人民力量的一击。\n——1946年会见安娜·路易斯·斯特朗' },
-                { emoji: '🎯', title: '实事求是', subtitle: '从实际出发，探求事物的客观规律，不凭主观想象。\n——延安整风运动核心思想' },
-                { emoji: '🤝', title: '为人民服务', subtitle: '人固有一死，或重于泰山，或轻于鸿毛。\n——《为人民服务》1944年' },
-                { emoji: '🌾', title: '自己动手，丰衣足食', subtitle: '依靠自身力量克服困难，独立自主艰苦奋斗。\n——大生产运动时期号召' },
-                { emoji: '♟️', title: '战略上藐视敌人，战术上重视敌人', subtitle: '既要有必胜的信念，又要慎重对待每一个具体问题。\n——军事斗争重要策略思想' },
-                { emoji: '🔍', title: '虚心使人进步，骄傲使人落后', subtitle: '戒骄戒躁，永远保持谦逊学习的态度。\n——1956年中共八大开幕词' },
-                { emoji: '🏔️', title: '前途是光明的，道路是曲折的', subtitle: '坚定信念的同时，也要做好战胜困难的充分准备。\n——《论联合政府》1945年' },
-                { emoji: '⏰', title: '一万年太久，只争朝夕', subtitle: '抓住当下，分秒必争地去奋斗，不等不靠。\n——《满江红·和郭沫若同志》1963年' },
-                { emoji: '👥', title: '群众是真正的英雄', subtitle: '人民群众是历史的创造者，是真正的铜墙铁壁。\n——《〈农村调查〉的序言和跋》1941年' },
-                { emoji: '⚔️', title: '在战争中学习战争', subtitle: '实践是最好的老师，干就是学习，边干边学。\n——《中国革命战争的战略问题》1936年' },
-                { emoji: '🗺️', title: '枪杆子里面出政权', subtitle: '只有掌握武装力量，才能夺取和巩固政权。\n——八七会议 1927年' },
-                { emoji: '🧱', title: '放在自己力量的基点上', subtitle: '独立自主，自力更生，不依赖外援。\n——《抗日战争胜利后的时局和我们的方针》1945年' },
-                { emoji: '🪜', title: '关心群众生活，注意工作方法', subtitle: '解决群众的柴米油盐问题，群众才会拥护我们。\n——《关心群众生活，注意工作方法》1934年' },
-                { emoji: '📖', title: '读书是学习，使用也是学习', subtitle: '而且是更重要的学习，理论须联系实际。\n——《中国革命战争的战略问题》1936年' },
-                { emoji: '🧭', title: '干部就是决定的因素', subtitle: '政治路线确定之后，选人用人至关重要。\n——《中国共产党在民族战争中的地位》1938年' },
-                { emoji: '🌊', title: '到什么山上唱什么歌', subtitle: '因地制宜，具体问题具体分析，不搞一刀切。\n——《反对党八股》1942年' },
-                { emoji: '🕊️', title: '惩前毖后，治病救人', subtitle: '批评不是为了整人，而是为了团结和帮助同志。\n——《整顿党的作风》1942年' },
-                { emoji: '💪', title: '世界上怕就怕“认真”二字', subtitle: '只要有了认真的态度，什么困难都能克服。\n——1957年在莫斯科大学的讲话' },
-                { emoji: '🔗', title: '支部建在连上', subtitle: '党的基层组织是战斗力的源泉，是团结官兵的纽带。\n——《井冈山的斗争》1928年' },
-                { emoji: '🧼', title: '扫帚不到，灰尘照例不会自己跑掉', subtitle: '反动势力不会自行消亡，必须靠斗争去清除。\n——《抗日战争胜利后的时局和我们的方针》1945年' },
-                { emoji: '🛡️', title: '保存自己，消灭敌人', subtitle: '军事行动的基本原则，保存有生力量是前提。\n——《论持久战》1938年' },
-                { emoji: '🌱', title: '事物发展的根本原因在于内部的矛盾性', subtitle: '内因是变化的根据，外因是变化的条件。\n——《矛盾论》1937年' },
-                { emoji: '🪞', title: '通过实践发现真理，又通过实践证实真理', subtitle: '实践、认识、再实践、再认识，循环往复向前。\n——《实践论》1937年' },
-                { emoji: '🧶', title: '抓住主要矛盾', subtitle: '在复杂事物中，必有一种矛盾是主要的、起决定作用的。\n——《矛盾论》1937年' },
-                { emoji: '🐢', title: '持久战', subtitle: '速胜论和亡国论都是错的，胜利要靠长期积蓄力量。\n——《论持久战》1938年' },
-                { emoji: '🦅', title: '敌进我退，敌驻我扰，敌疲我打，敌退我追', subtitle: '游击战争十六字诀，机动灵活的战略战术。\n——井冈山斗争时期总结' },
-                { emoji: '🪨', title: '伤其十指不如断其一指', subtitle: '集中优势兵力，各个歼灭敌人，打歼灭战不打击溃战。\n——《中国革命战争的战略问题》1936年' },
-                { emoji: '🔦', title: '走马看花，下马看花', subtitle: '既要做面上的广泛了解，也要深入基层详细研究。\n——《我们党的一些历史经验》1956年' },
-                { emoji: '🍚', title: '手中有粮，心里不慌', subtitle: '物质基础是稳定人心的根本保障。\n——1959年提出的著名论断' },
-                { emoji: '🧊', title: '冷热结合', subtitle: '头脑要冷静，心肠要热，既要有革命热情又要有科学态度。\n——《工作方法六十条》1958年' },
-                { emoji: '🪢', title: '团结—批评—团结', subtitle: '从团结的愿望出发，通过批评达到新的团结。\n——《关于正确处理人民内部矛盾的问题》1957年' },
-                { emoji: '🌺', title: '百花齐放，百家争鸣', subtitle: '艺术和科学领域让不同风格、学派自由发展讨论。\n——《关于正确处理人民内部矛盾的问题》1957年' },
-                { emoji: '🦴', title: '硬骨头六连精神', subtitle: '越是困难越向前，敢打硬仗、能打硬仗。\n——1964年国防部命名表彰' },
-                { emoji: '🚶', title: '万里长征只走完了第一步', subtitle: '胜利后更需保持谦虚谨慎，不骄不躁的作风。\n——《在中国共产党第七届中央委员会第二次全体会议上的报告》1949年' },
-                { emoji: '🍬', title: '糖衣炮弹', subtitle: '警惕资产阶级用物质享受腐蚀革命意志。\n——《在中国共产党第七届中央委员会第二次全体会议上的报告》1949年' },
-                { emoji: '⛰️', title: '唯有牺牲多壮志，敢教日月换新天', subtitle: '革命英雄主义与改天换地的豪迈气概。\n——《七律·到韶山》1959年' },
-                { emoji: '📰', title: '把思想战线统率起来', subtitle: '舆论阵地，无产阶级不去占领，资产阶级必然占领。\n——长期关于意识形态工作的论述' },
-                { emoji: '🌳', title: '十年树木，百年树人', subtitle: '培养人才是长久之计，需持续投入教育。\n——引申自古训，多次强调教育的重要性' },
-                { emoji: '🔑', title: '依靠群众，相信群众', subtitle: '群众是真正的铜墙铁壁，是胜利的力量源泉。\n——《关心群众生活，注意工作方法》1934年' },
-                { emoji: '🧭', title: '反对本本主义', subtitle: '不唯书、不唯上、只唯实，反对脱离实际的教条。\n——《反对本本主义》1930年' },
-                { emoji: '🧩', title: '分清敌友，是革命的首要问题', subtitle: '谁是敌人，谁是朋友，这是决定策略的基础。\n——《中国社会各阶级的分析》1925年' },
-                { emoji: '🍃', title: '任凭风吹浪打，胜似闲庭信步', subtitle: '面对严峻局势，保持从容不迫的战略定力。\n——《水调歌头·游泳》1956年' },
-                { emoji: '🧱', title: '兵民是胜利之本', subtitle: '战争的伟力之最深厚的根源，存在于民众之中。\n——《论持久战》1938年' },
-                { emoji: '📐', title: '学会“弹钢琴”', subtitle: '工作要有节奏，既要突出重点又要统筹兼顾。\n——《党委会的工作方法》1949年' },
-                
-                // ========== 第一卷（1925-1937）==========
-                { emoji: '🧭', title: '分清敌友，是革命的首要问题', subtitle: '谁是我们的敌人？谁是我们的朋友？这个问题是革命的首要问题。\n——《中国社会各阶级的分析》1925年' },
-                { emoji: '⚡', title: '革命不是请客吃饭', subtitle: '革命是暴动，是一个阶级推翻一个阶级的暴烈的行动。\n——《湖南农民运动考察报告》1927年' },
-                { emoji: '〰️', title: '矫枉必须过正', subtitle: '不过正不能矫枉，终结旧秩序须用群众的革命方法。\n——《湖南农民运动考察报告》1927年' },
-                { emoji: '🏹', title: '引而不发，跃如也', subtitle: '善于启发群众自觉，而非越俎代庖。\n——《湖南农民运动考察报告》1927年' },
-                { emoji: '🗺️', title: '枪杆子里面出政权', subtitle: '须知政权是由枪杆子中取得的。\n——八七会议发言 1927年' },
-                { emoji: '🔥', title: '星星之火，可以燎原', subtitle: '看事情必须看它的实质，这才是可靠的科学的分析方法。\n——《星星之火，可以燎原》1930年' },
-                { emoji: '📋', title: '没有调查，就没有发言权', subtitle: '一切结论产生于调查情况的末尾，而不是在它的先头。\n——《反对本本主义》1930年' },
-                { emoji: '🤰', title: '调查如十月怀胎，解决如一朝分娩', subtitle: '迈开两脚，学孔夫子的“每事问”，调查就是解决问题。\n——《反对本本主义》1930年' },
-                { emoji: '📖', title: '反对本本主义', subtitle: '不唯书、不唯上、只唯实，马克思主义的“本本”必须同我国实际结合。\n——《反对本本主义》1930年' },
-                { emoji: '🌉', title: '任务是过河，方法就是桥或船', subtitle: '不解决方法问题，任务也只是瞎说一顿。\n——《关心群众生活，注意工作方法》1934年' },
-                { emoji: '🧱', title: '群众是真正的铜墙铁壁', subtitle: '什么力量也打不破的，完全打不破的。\n——《关心群众生活，注意工作方法》1934年' },
-                { emoji: '🐸', title: '反对井底之蛙的视角', subtitle: '马克思主义者看问题，不但要看到部分，而且要看到全体。\n——《论反对日本帝国主义的策略》1935年' },
-                { emoji: '🚶', title: '长征是宣言书，是宣传队，是播种机', subtitle: '它向全世界宣告，红军是英雄好汉。\n——《论反对日本帝国主义的策略》1935年' },
-                { emoji: '🩸', title: '尊重自己流血的经验', subtitle: '读书是学习，使用也是学习，而且是更重要的学习。\n——《中国革命战争的战略问题》1936年' },
-                { emoji: '♟️', title: '没有全局在胸，投不下一着好棋子', subtitle: '指挥全局的人，最要紧的是照顾战争的全局。\n——《中国革命战争的战略问题》1936年' },
-                { emoji: '🤼', title: '聪明的拳师往往退让一步', subtitle: '两个拳师放对，蠢人气势汹汹先出全副本领，反被退让者打倒。\n——《中国革命战争的战略问题》1936年' },
-                { emoji: '🍐', title: '要知道梨子的滋味，就得亲口吃一吃', subtitle: '一切真知都是从直接经验发源的。\n——《实践论》1937年' },
-                { emoji: '🔄', title: '实践、认识、再实践、再认识', subtitle: '这就是辩证唯物论的知行统一观。\n——《实践论》1937年' },
-                { emoji: '🌱', title: '事物发展的根本原因在于内部矛盾', subtitle: '外因是变化的条件，内因是变化的根据。\n——《矛盾论》1937年' },
-                { emoji: '🧶', title: '抓住主要矛盾', subtitle: '研究任何过程，全力找出它的主要矛盾，一切问题就迎刃而解。\n——《矛盾论》1937年' },
-            
-                // ========== 第二卷（1937-1941）==========
-                { emoji: '🛡️', title: '自由主义是消极的腐蚀剂', subtitle: '事不关己高高挂起；明知不对少说为佳；明哲保身但求无过。\n——《反对自由主义》1937年' },
-                { emoji: '🐢', title: '抗日战争是持久战', subtitle: '速胜论和亡国论都是错误的，最后胜利是中国的。\n——《论持久战》1938年' },
-                { emoji: '🦅', title: '保存自己，消灭敌人', subtitle: '战争的目的不是别的，就是“保存自己，消灭敌人”。\n——《论持久战》1938年' },
-                { emoji: '💣', title: '武器是重要因素，但决定因素是人', subtitle: '原子弹是纸老虎，军力经济力要人去掌握。\n——《论持久战》1938年' },
-                { emoji: '🧭', title: '政治路线确定后，干部就是决定的因素', subtitle: '必须善于识别干部，善于使用干部，善于爱护干部。\n——《中国共产党在民族战争中的地位》1938年' },
-                { emoji: '🐱', title: '洋八股必须废止，教条主义必须休息', subtitle: '代之以新鲜活泼的、为中国老百姓所喜闻乐见的中国作风和中国气派。\n——《中国共产党在民族战争中的地位》1938年' },
-                { emoji: '🤝', title: '共产党员应和党外人士合作', subtitle: '倾听群众意见，和群众保持最密切的联系。\n——《中国共产党在民族战争中的地位》1938年' },
-                { emoji: '🔗', title: '统一战线，独立自主', subtitle: '既统一又独立，既不破裂统一战线又不束缚自己手脚。\n——《统一战线中的独立自主问题》1938年' },
-                { emoji: '🪖', title: '在战争中学习战争', subtitle: '干就是学习，边干边学，从老百姓到军人有一个距离。\n——《战争和战略问题》1938年' },
-                { emoji: '💀', title: '捣乱，失败，再捣乱，直至灭亡', subtitle: '这就是帝国主义和一切反动派的逻辑。\n——《丢掉幻想，准备斗争》1939年' },
-                { emoji: '🔩', title: '白求恩精神：毫不利己，专门利人', subtitle: '一个人能力有大小，但只要有这点精神，就是一个高尚的人。\n——《纪念白求恩》1939年' },
-                { emoji: '📘', title: '新民主主义革命', subtitle: '无产阶级领导的，人民大众的，反帝反封建的革命。\n——《新民主主义论》1940年' },
-                { emoji: '🏛️', title: '我们要建立一个新中国', subtitle: '不但要把一个政治上受压迫、经济上受剥削的中国，变为一个政治上自由和经济上繁荣的中国。\n——《新民主主义论》1940年' },
-                { emoji: '✍️', title: '惩前毖后，治病救人', subtitle: '对以前的错误一定要揭发，不讲情面，以便使后来的工作慎重些。\n——《整顿党的作风》1942年' },
-                { emoji: '🌊', title: '到什么山上唱什么歌', subtitle: '看菜吃饭，量体裁衣，我们无论做什么事都要看情形办理。\n——《反对党八股》1942年' },
-                { emoji: '🔦', title: '只有代表群众才能教育群众', subtitle: '只有做群众的学生才能做群众的先生。\n——《在延安文艺座谈会上的讲话》1942年' },
-            
-                // ========== 第三卷（1941-1945）==========
-                { emoji: '🎯', title: '实事求是', subtitle: '“实事”就是客观存在着的一切事物，“是”就是规律性，“求”就是去研究。\n——《改造我们的学习》1941年' },
-                { emoji: '👥', title: '群众是真正的英雄', subtitle: '而我们自己则往往是幼稚可笑的，不了解这一点就不能得到起码的知识。\n——《〈农村调查〉的序言和跋》1941年' },
-                { emoji: '🤝', title: '为人民服务', subtitle: '人固有一死，或重于泰山，或轻于鸿毛。\n——《为人民服务》1944年' },
-                { emoji: '🌍', title: '五湖四海走到一起', subtitle: '我们都是来自五湖四海，为了一个共同的革命目标，走到一起来了。\n——《为人民服务》1944年' },
-                { emoji: '🔄', title: '从群众中来，到群众中去', subtitle: '将群众的分散意见集中起来，再到群众中坚持下去，见之于行动。\n——《关于领导方法的若干问题》1943年' },
-                { emoji: '👑', title: '历史是人民创造的', subtitle: '人民，只有人民，才是创造世界历史的动力。\n——《论联合政府》1945年' },
-                { emoji: '🏔️', title: '前途是光明的，道路是曲折的', subtitle: '我们和全体人民团结起来，共同努力，一定能够排除万难。\n——《论联合政府》1945年' },
-                { emoji: '🌾', title: '自己动手，丰衣足食', subtitle: '我们有打仗的军队，又有劳动的军队。\n——《组织起来》1943年讲话核心精神' },
-                { emoji: '🧹', title: '扫帚不到，灰尘照例不会自己跑掉', subtitle: '凡是反动的东西，你不打，他就不倒。\n——《抗日战争胜利后的时局和我们的方针》1945年' },
-                { emoji: '🤝', title: '针锋相对，寸土必争', subtitle: '人民的武装，一支枪、一粒子弹，都要保存，不能交出去。\n——《抗日战争胜利后的时局和我们的方针》1945年' },
-            
-                // ========== 第四卷（1945-1949）==========
-                { emoji: '🧑‍🌾', title: '共产党人好比种子，人民好比土地', subtitle: '我们到了一个地方，就要同那里的人民结合起来，在人民中间生根、开花。\n——《关于重庆谈判》1945年' },
-                { emoji: '🐯', title: '一切反动派都是纸老虎', subtitle: '看起来可怕，实际上经不起人民力量的一击。\n——1946年会见安娜·路易斯·斯特朗' },
-                { emoji: '♟️', title: '战略上藐视敌人，战术上重视敌人', subtitle: '既要有必胜的信念，又要慎重对待每一个具体问题。\n——《关于目前党的政策中的几个重要问题》1948年' },
-                { emoji: '🚶‍♂️', title: '夺取全国胜利，只是万里长征走完了第一步', subtitle: '以后的路程更长，工作更伟大，更艰苦。\n——《在七届二中全会上的报告》1949年' },
-                { emoji: '🍬', title: '警惕糖衣炮弹', subtitle: '可能有这样一些共产党人，在糖弹面前要打败仗。\n——《在七届二中全会上的报告》1949年' },
-                { emoji: '🧱', title: '我们不但善于破坏一个旧世界', subtitle: '我们还将善于建设一个新世界。\n——《在七届二中全会上的报告》1949年' },
-                { emoji: '🚫', title: '封锁吧，封锁十年八年', subtitle: '中国的一切问题都解决了，中国人死都不怕，还怕困难吗？\n——《别了，司徒雷登》1949年' },
-                { emoji: '📜', title: '论人民民主专政', subtitle: '对人民内部的民主方面和对反动派的专政方面，互相结合起来。\n——《论人民民主专政》1949年' },
-                { emoji: '🎉', title: '中国人民从此站起来了', subtitle: '我们的民族将再也不是一个被人侮辱的民族了。\n——1949年全国政协第一届全体会议' },
-            
-                // ========== 第五卷及建国后（1949-1976）==========
-                { emoji: '🔍', title: '虚心使人进步，骄傲使人落后', subtitle: '戒骄戒躁，永远保持谦逊学习的态度。\n——1956年中共八大开幕词' },
-                { emoji: '🌸', title: '百花齐放，百家争鸣', subtitle: '艺术上不同形式和风格可以自由发展，科学上不同学派可以自由争论。\n——《关于正确处理人民内部矛盾的问题》1957年' },
-                { emoji: '🪢', title: '团结—批评—团结', subtitle: '从团结的愿望出发，经过批评或者斗争，在新的基础上达到新的团结。\n——《关于正确处理人民内部矛盾的问题》1957年' },
-                { emoji: '☀️', title: '青年如早晨八九点钟的太阳', subtitle: '世界是你们的，也是我们的，但归根结底是你们的。\n——1957年在莫斯科大学的讲话' },
-                { emoji: '💪', title: '世界上怕就怕“认真”二字', subtitle: '共产党就最讲“认真”。\n——1957年在莫斯科大学的讲话' },
-                { emoji: '📄', title: '一张白纸，好写最新最美的文字', subtitle: '穷则思变，要干，要革命。\n——《介绍一个合作社》1958年' },
-                { emoji: '⏰', title: '一万年太久，只争朝夕', subtitle: '抓住当下，分秒必争地去奋斗，不等不靠。\n——《满江红·和郭沫若同志》1963年' },
-            
-                // ========== 经典诗词及补充 ==========
-                { emoji: '⛰️', title: '唯有牺牲多壮志，敢教日月换新天', subtitle: '革命英雄主义与改天换地的豪迈气概。\n——《七律·到韶山》1959年' },
-                { emoji: '🚶', title: '雄关漫道真如铁，而今迈步从头越', subtitle: '面对严峻局势，保持从容不迫的战略定力。\n——《忆秦娥·娄山关》1935年' },
-                { emoji: '🌾', title: '军民团结如一人，试看天下谁能敌', subtitle: '兵民是胜利之本，战争的伟力之最深厚的根源存在于民众之中。\n——《论持久战》1938年延伸精神' },
-                { emoji: '⚠️', title: '人不犯我，我不犯人；人若犯我，我必犯人', subtitle: '坚决自卫，绝不在原则问题上妥协退让。\n——1939年同中央社、扫荡报、新民报三记者的谈话' },
-                { emoji: '🧱', title: '自力更生，艰苦奋斗', subtitle: '依靠自身力量克服困难，独立自主。\n——贯穿毛泽东思想的核心理念' },
-                { emoji: '📝', title: '没有满腔的热忱，没有眼睛向下的决心', subtitle: '没有求知的渴望，没有放下臭架子甘当小学生的精神，是一定不能做也做不好的。\n——《〈农村调查〉的序言和跋》1941年' },
-                { emoji: '⚖️', title: '具体地分析具体情况', subtitle: '马克思主义的最本质的东西，马克思主义的活的灵魂。\n——《矛盾论》延伸核心观点 1937年' },
-                { emoji: '💎', title: '伤其十指不如断其一指', subtitle: '集中优势兵力，各个歼灭敌人。\n——《中国革命战争的战略问题》1936年' },
-                { emoji: '🧭', title: '敌进我退，敌驻我扰，敌疲我打，敌退我追', subtitle: '游击战争十六字诀，机动灵活的战略战术。\n——井冈山斗争时期总结' },
-                { emoji: '🛤️', title: '走马看花与下马看花', subtitle: '既要广泛了解，也要深入基层详细研究。\n——《我们党的一些历史经验》1956年' },
-                { emoji: '🧊', title: '冷热结合，敢想敢干', subtitle: '头脑要冷静心肠要热，既要有革命热情又要有科学态度。\n——《工作方法六十条》1958年' },
-                { emoji: '📐', title: '学会“弹钢琴”', subtitle: '工作要有节奏，既要突出重点又要统筹兼顾。\n——《党委会的工作方法》1949年' },
-                { emoji: '🪑', title: '党委书记要善于当“班长”', subtitle: '有问题摆到桌面上来，不要在背后议论。\n——《党委会的工作方法》1949年' },
-                { emoji: '🚪', title: '打开窗户透空气', subtitle: '广开言路，不要怕打开窗户可能吹进沙子来，坏处有一点但利益很大。\n——《毛泽东文集》第3卷' },
-                { emoji: '💬', title: '要人家服，只能说服，不能压服', subtitle: '以力服人不行，对付敌人可以这样，对付同志和朋友绝不能用。\n——《毛泽东文集》第7卷' },
-                { emoji: '🍚', title: '手中有粮，心里不慌', subtitle: '物质基础是稳定人心的根本保障。\n——1959年提出的著名论断' },
-                { emoji: '🌪️', title: '与天奋斗，其乐无穷；与地奋斗，其乐无穷', subtitle: '大无畏的革命乐观主义精神。\n——《毛泽东自传》中青年时期的誓言' },
-                { emoji: '🎖️', title: '下定决心，不怕牺牲，排除万难，去争取胜利', subtitle: '愚公移山，改造中国。\n——《愚公移山》1945年' },
-                { emoji: '💡', title: '错误常常是正确的先导', subtitle: '我们走过了许多弯路，但错误能帮助人头脑清醒。\n——《毛泽东文集》第8卷' },
-                { emoji: '👂', title: '兼听则明，偏信则暗', subtitle: '有事和群众商量，听取各种不同意见。\n——长期倡导的工作作风' },
-                { emoji: '🌳', title: '十年树木，百年树人', subtitle: '培养人才是长久之计。\n——引申自古训，多次强调教育的重要性' },
-                { emoji: '🐎', title: '不是东风压倒西风，就是西风压倒东风', subtitle: '在路线问题上没有调和的余地。\n——1957年在莫斯科的讲话' },
-                { emoji: '🪨', title: '向雷锋同志学习', subtitle: '全心全意为人民服务的精神。\n——1963年题词' },
-                { emoji: '🔬', title: '科学技术这一仗，一定要打，而且必须打好', subtitle: '不搞科学技术，生产力无法提高。\n——1963年听取科学技术工作规划汇报时讲话' },
-                { emoji: '🏗️', title: '工、农、商、学、兵、政、党，党是领导一切的', subtitle: '领导我们事业的核心力量是中国共产党。\n——《在扩大的中央工作会议上的讲话》1962年' },
-                { emoji: '🇨🇳', title: '中国永远不称霸', subtitle: '我们坚决反对大国沙文主义。\n——关于对外政策的多次论述' },
-                { emoji: '🏃', title: '发展体育运动，增强人民体质', subtitle: '身体是革命的本钱。\n——1952年为中华全国体育总会题词' },
-                { emoji: '✍️', title: '好好学习，天天向上', subtitle: '最简单而又最深刻的求知之道。\n——1940年为儿童节题词精神延续' },
-                { emoji: '🕊️', title: '友谊第一，比赛第二', subtitle: '重在参与与团结，超越纯粹的胜负。\n——关于体育外交的指示' },
-                { emoji: '💪', title: '文明其精神，野蛮其体魄', subtitle: '全面发展的教育理念。\n——《体育之研究》1917年' },
-                { emoji: '👁️', title: '没有正确的政治观点，就等于没有灵魂', subtitle: '思想政治工作是一切工作的生命线。\n——《关于正确处理人民内部矛盾的问题》1957年' }
-            ];
+            // 合并成一个新对象
+            const BOOKS = { ...BOOK1, ...BOOK2, ...BOOK3 };
 
-            function applyGlobalTexts() {
-                document.querySelector('.book-title-text').textContent = siteConfig.mainTitle;
-                document.querySelector('.book-title-sub').textContent = siteConfig.subTitle;
-                document.querySelector('.intro-book-name').textContent = siteConfig.subTitle;
-                document.querySelector('.intro-title').textContent = siteConfig.mainTitle;
-                document.querySelector('.intro-subtitle').innerHTML = siteConfig.collectionDesc;
-                document.querySelector('.card__book-badge').innerHTML = siteConfig.collectionDesc;
-                document.title = `${siteConfig.mainTitle} · ${siteConfig.subTitle}名言卡片`;
-            }
-            applyGlobalTexts();
+            const SITE_MAIN_TITLE = "人生卡壳，翻翻名册";
+            let currentBookKey = "毛泽东选集";
+            let currentCardList = [];
+            let currentCardIndex = 0;
+            let drawCount = 0;
+            let hasEntered = false;
+            let isAnimating = false;
+            let toastTimer = null;
+            let recentIndices = [];
 
-            // 生成左上角二维码
-            const qrImg = document.getElementById('qrMiniImg');
-            function initMiniQR() {
-                const url = siteConfig.qrUrl || window.location.href;
-                const encoded = encodeURIComponent(url);
-                qrImg.src = `https://quickchart.io/qr?text=${encoded}&size=180&margin=2&ecLevel=H`;
-                qrImg.alt = `扫码访问${siteConfig.mainTitle}`;
-                qrImg.onerror = () => {
-                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encoded}`;
-                };
-            }
-            initMiniQR();
+            // 作者联系方式二维码（可替换为真实微信二维码图片）
+            const AUTHOR_CONTACT_QR_URL = "https://u.wechat.com/EEbI8vq4ZJps9mAGeDgnWIs?s=2";
+            const AUTHOR_CONTACT_QR = "https://quickchart.io/qr?text="+encodeURIComponent(AUTHOR_CONTACT_QR_URL)+"&size=300&margin=2&ecLevel=H";
 
-            const qrContainer = document.getElementById('qrMiniContainer');
-            if (qrContainer) {
-                qrContainer.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    window.open(siteConfig.qrUrl, '_blank');
-                });
-            }
-
-            // 核心交互逻辑
+            // DOM 元素
             const root = document.documentElement;
             const introScreen = document.getElementById('introScreen');
             const mainApp = document.getElementById('mainApp');
@@ -953,111 +933,176 @@
             const cardEl = document.getElementById('card');
             const copyToast = document.getElementById('copyToast');
             const cardCopyArea = document.getElementById('cardCopyArea');
+            const dynamicSubTitle = document.getElementById('dynamicSubTitle');
+            const cardBadge = document.getElementById('cardBadge');
+            const introBookName = document.getElementById('introBookName');
+            const introDesc = document.getElementById('introDesc');
+            const introEmoji = document.getElementById('introEmoji');
+            const qrMiniImg = document.getElementById('qrMiniImg');
+            const bookSelector = document.getElementById('bookSelector');
+            const titleGroupTrigger = document.getElementById('titleGroupTrigger');
+            const bookSearchInput = document.getElementById('bookSearchInput');
+            const bookStats = document.getElementById('bookStats');
+            const selectorWrapper = document.getElementById('bookSelectorWrapper');
+            const suggestModal = document.getElementById('suggestModal');
+            const suggestQrImg = document.getElementById('suggestQrImg');
+            const closeSuggestBtn = document.getElementById('closeSuggestBtn');
 
-            let isAnimating = false;
-            let drawCount = 0;
-            let currentCardIndex = 0;
-            let hasEntered = false;
-            let toastTimer = null;
+            // 更新渐变遮罩可见性（根据内容是否可滚动）
+            function updateFadeVisibility() {
+                if (!selectorWrapper || !bookSelector) return;
+                const isScrollable = bookSelector.scrollHeight > bookSelector.clientHeight;
+                if (isScrollable) {
+                    selectorWrapper.classList.add('scrollable');
+                } else {
+                    selectorWrapper.classList.remove('scrollable');
+                }
+            }
 
+            // 颜色映射
+            const defaultTheme = { r: 180, g: 35, b: 35 };
             function updateThemeByEmoji(emoji) {
-                const colorConfig = emojiColorMap[emoji] || { theme: { r: 180, g: 35, b: 35 }, cardBg: { r: 255, g: 240, b: 238 } };
-                const t = colorConfig.theme;
-                const bg = colorConfig.cardBg;
-                root.style.setProperty('--theme-r', t.r);
-                root.style.setProperty('--theme-g', t.g);
-                root.style.setProperty('--theme-b', t.b);
-                root.style.setProperty('--card-bg-r', bg.r);
-                root.style.setProperty('--card-bg-g', bg.g);
-                root.style.setProperty('--card-bg-b', bg.b);
+                let theme = defaultTheme;
+                if (emoji === '🔥') theme = { r: 210, g: 55, b: 30 };
+                else if (emoji === '⚡') theme = { r: 185, g: 85, b: 35 };
+                else if (emoji === '☰') theme = { r: 180, g: 35, b: 35 };
+                root.style.setProperty('--theme-r', theme.r);
+                root.style.setProperty('--theme-g', theme.g);
+                root.style.setProperty('--theme-b', theme.b);
+                root.style.setProperty('--card-bg-r', 255);
+                root.style.setProperty('--card-bg-g', 248);
+                root.style.setProperty('--card-bg-b', 240);
                 root.style.setProperty('--card-bg-alpha', '0.92');
             }
 
             function updateCardDOM(card) {
+                if(!card) return;
                 cardEmojiEl.textContent = card.emoji;
                 cardTitleEl.textContent = card.title;
                 cardSubtitleEl.textContent = card.subtitle;
                 updateThemeByEmoji(card.emoji);
             }
 
-            function getRandomCardIndex() { return Math.floor(Math.random() * cards.length); }
-            function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
-            function hideContent() { return new Promise(resolve => { cardContentEl.classList.add('hiding'); setTimeout(resolve, 80); }); }
-            function showContent() { return new Promise(resolve => { cardContentEl.classList.remove('hiding'); setTimeout(resolve, 80); }); }
-
-            function createRipple(event) {
-                const btn = event.currentTarget;
-                const rect = btn.getBoundingClientRect();
-                const ripple = document.createElement('span');
-                ripple.classList.add('btn__ripple');
-                const size = Math.max(rect.width, rect.height);
-                ripple.style.width = size + 'px';
-                ripple.style.height = size + 'px';
-                ripple.style.left = (event.clientX - rect.left - size / 2) + 'px';
-                ripple.style.top = (event.clientY - rect.top - size / 2) + 'px';
-                btn.appendChild(ripple);
-                ripple.addEventListener('animationend', () => ripple.remove());
-            }
-
-            function triggerCardGlow(duration = 700) { cardEl.classList.add('glow'); setTimeout(() => cardEl.classList.remove('glow'), duration); }
-
-            function copyCardContent() {
-                if (!hasEntered) return;
-                const title = cardTitleEl.textContent;
-                const subtitle = cardSubtitleEl.textContent;
-                const textToCopy = `「${title}」\n${subtitle.replace(/\n/g, ' ')}`;
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(textToCopy).then(() => showCopyToast()).catch(() => fallbackCopy(textToCopy));
-                } else { fallbackCopy(textToCopy); }
-            }
-            function fallbackCopy(text) {
-                const textarea = document.createElement('textarea');
-                textarea.value = text;
-                textarea.style.cssText = 'position:fixed;left:-9999px;top:-9999px';
-                document.body.appendChild(textarea);
-                textarea.select();
-                try { document.execCommand('copy'); showCopyToast(); } catch(e) {}
-                document.body.removeChild(textarea);
-            }
-            function showCopyToast() {
-                if (toastTimer) clearTimeout(toastTimer);
-                copyToast.classList.add('show');
-                toastTimer = setTimeout(() => { copyToast.classList.remove('show'); toastTimer = null; }, 1800);
-            }
-
-            async function drawCard() {
-                if (isAnimating || !hasEntered) return;
-                isAnimating = true;
-                drawBtn.disabled = true;
-                btnTextEl.textContent = '抽取中...';
-                drawBtn.style.animationPlayState = 'paused';
-                const finalIndex = getRandomCardIndex();
-                let tempIndices = [];
-                const switchCount = 5;
-                for (let i = 0; i < switchCount; i++) {
-                    let idx = getRandomCardIndex();
-                    if (i === 0 && idx === currentCardIndex && cards.length > 1) idx = (currentCardIndex + 1) % cards.length;
-                    tempIndices.push(idx);
+            function getRandomCardIndexAvoidRecent() {
+                if (!currentCardList.length) return 0;
+                const total = currentCardList.length;
+                if (total <= 3) return Math.floor(Math.random() * total);
+                const forbidSet = new Set(recentIndices);
+                const candidates = [];
+                for (let i = 0; i < total; i++) {
+                    if (!forbidSet.has(i)) candidates.push(i);
                 }
-                const intervals = [70, 90, 120, 160, 200];
-                for (let i = 0; i < switchCount; i++) {
-                    await hideContent();
-                    updateCardDOM(cards[tempIndices[i]]);
-                    currentCardIndex = tempIndices[i];
-                    await showContent();
-                    if (i < switchCount - 1) await wait(intervals[i]);
+                if (candidates.length === 0) return Math.floor(Math.random() * total);
+                return candidates[Math.floor(Math.random() * candidates.length)];
+            }
+
+            function recordRecentIndex(idx) {
+                recentIndices.push(idx);
+                while (recentIndices.length > 3) recentIndices.shift();
+            }
+
+            function updateBookStats() {
+                const total = Object.keys(BOOKS).length;
+                const searchTerm = bookSearchInput ? bookSearchInput.value.trim().toLowerCase() : '';
+                if (!searchTerm) {
+                    bookStats.textContent = `共 ${total} 本典籍`;
+                } else {
+                    const filtered = Object.keys(BOOKS).filter(key => BOOKS[key].name.toLowerCase().includes(searchTerm));
+                    bookStats.textContent = `找到 ${filtered.length} 本（共 ${total} 本）`;
                 }
-                await wait(180);
-                await hideContent();
-                updateCardDOM(cards[finalIndex]);
-                currentCardIndex = finalIndex;
-                await showContent();
-                triggerCardGlow(700);
-                drawCount++;
-                counterNumEl.textContent = drawCount;
-                drawBtn.disabled = false;
-                btnTextEl.textContent = '随机抽取';
-                drawBtn.style.animationPlayState = 'running';
+            }
+
+            function renderBookList() {
+                const searchTerm = bookSearchInput ? bookSearchInput.value.trim().toLowerCase() : '';
+                const allBooks = Object.entries(BOOKS);
+                let filtered = allBooks;
+                if (searchTerm) {
+                    filtered = allBooks.filter(([key, book]) => book.name.toLowerCase().includes(searchTerm));
+                }
+                if (!bookSelector) return;
+                bookSelector.innerHTML = '';
+                // 建议按钮
+                const suggestBtn = document.createElement('button');
+                suggestBtn.className = 'book-selector-item suggest-btn';
+                suggestBtn.textContent = '建议';
+                suggestBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    suggestQrImg.src = AUTHOR_CONTACT_QR;
+                    suggestModal.classList.add('show');
+                });
+                bookSelector.appendChild(suggestBtn);
+                
+                if (filtered.length === 0) {
+                    const emptyMsg = document.createElement('div');
+                    emptyMsg.className = 'no-books-tip';
+                    emptyMsg.textContent = '📭 未找到相关典籍';
+                    bookSelector.appendChild(emptyMsg);
+                    suggestBtn.textContent = '向作者推荐';
+                } else {
+                    filtered.forEach(([key, book]) => {
+                        const btn = document.createElement('button');
+                        btn.className = 'book-selector-item';
+                        if (key === currentBookKey) btn.classList.add('active');
+                        btn.textContent = book.name;
+                        btn.dataset.book = key;
+                        btn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            if (key === currentBookKey) return;
+                            switchToBook(key, true);
+                        });
+                        bookSelector.appendChild(btn);
+                    });
+                }
+                updateBookStats();
+                // 重新检测滚动条
+                setTimeout(updateFadeVisibility, 20);
+            }
+
+            function refreshCoverUI() {
+                const book = BOOKS[currentBookKey];
+                if(!book) return;
+                introBookName.textContent = book.name;
+                introDesc.innerHTML = `${book.description}<br>触碰智慧，随机抽取`;
+                introEmoji.textContent = book.icon || '📖';
+                dynamicSubTitle.textContent = book.name;
+                cardBadge.innerHTML = book.description;
+                document.title = `${SITE_MAIN_TITLE} · ${book.name}箴言卡片`;
+                renderBookList();
+                const url = window.location.href;
+                const encoded = encodeURIComponent(url);
+                qrMiniImg.src = `https://quickchart.io/qr?text=${encoded}&size=180&margin=2&ecLevel=H`;
+                qrMiniImg.onerror = () => { qrMiniImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encoded}`; };
+            }
+
+            function switchToBook(bookKey, updateHistory = true) {
+                if (!BOOKS[bookKey]) return;
+                if (bookKey === currentBookKey) return;
+                currentBookKey = bookKey;
+                currentCardList = BOOKS[bookKey].cards;
+                drawCount = 0;
+                if (counterNumEl) counterNumEl.textContent = "0";
+                recentIndices = [];
+                if (currentCardList.length) currentCardIndex = 0;
+                refreshCoverUI();
+                if (hasEntered) {
+                    exitToCover();
+                }
+                if (updateHistory) {
+                    const newUrl = new URL(window.location.href);
+                    newUrl.searchParams.set('book', bookKey);
+                    window.history.pushState({ book: bookKey }, '', newUrl.toString());
+                }
+            }
+
+            function exitToCover() {
+                if(!hasEntered) return;
+                hasEntered = false;
+                mainApp.classList.remove('visible');
+                btnWrapper.classList.remove('active');
+                counterEl.classList.remove('active');
+                introScreen.classList.remove('fade-out');
+                drawCount = 0;
+                counterNumEl.textContent = "0";
                 isAnimating = false;
             }
 
@@ -1068,37 +1113,146 @@
                 mainApp.classList.add('visible');
                 btnWrapper.classList.add('active');
                 counterEl.classList.add('active');
-                currentCardIndex = 0;
-                updateCardDOM(cards[0]);
-                cardContentEl.classList.add('hiding');
-                drawBtn.addEventListener('click', (event) => { createRipple(event); drawCard(); });
-                cardCopyArea.addEventListener('click', (event) => { event.stopPropagation(); copyCardContent(); });
-                document.addEventListener('keydown', (event) => {
-                    if (event.code === 'Space' || event.code === 'Enter') {
-                        if (document.activeElement === drawBtn) return;
-                        event.preventDefault();
-                        drawBtn.focus();
-                        drawCard();
-                    }
-                    if ((event.ctrlKey || event.metaKey) && event.code === 'KeyC') {
-                        const selection = window.getSelection();
-                        if (!selection || selection.toString().length === 0) copyCardContent();
-                    }
-                });
+                drawCount = 0;
+                counterNumEl.textContent = "0";
+                currentCardList = BOOKS[currentBookKey].cards;
+                recentIndices = [];
+                if (currentCardList.length) {
+                    currentCardIndex = 0;
+                    updateCardDOM(currentCardList[0]);
+                }
+                drawBtn.disabled = false;
+                btnTextEl.textContent = '随机抽取';
                 drawCard();
             }
 
-            introScreen.addEventListener('click', enterMainApp);
-            document.addEventListener('keydown', function openIntro(e) {
-                if (hasEntered) return;
-                if (e.code === 'F1' || e.code === 'F5' || e.ctrlKey || e.altKey) return;
-                e.preventDefault();
+            async function drawCard() {
+                if (isAnimating || !hasEntered || !currentCardList.length) return;
+                isAnimating = true;
+                drawBtn.disabled = true;
+                btnTextEl.textContent = '抽取中...';
+                drawBtn.style.animationPlayState = 'paused';
+                const finalIndex = getRandomCardIndexAvoidRecent();
+                const switchCount = Math.min(5, currentCardList.length);
+                let tempIndices = [];
+                for (let i = 0; i < switchCount; i++) {
+                    let idx = getRandomCardIndexAvoidRecent();
+                    if (i === 0 && idx === currentCardIndex && currentCardList.length > 1) {
+                        let newIdx = getRandomCardIndexAvoidRecent();
+                        while (newIdx === currentCardIndex && currentCardList.length > 1) newIdx = getRandomCardIndexAvoidRecent();
+                        idx = newIdx;
+                    }
+                    tempIndices.push(idx);
+                }
+                const intervals = [70,90,120,160,200];
+                for(let i=0;i<tempIndices.length;i++){
+                    await new Promise(r=>{ cardContentEl.classList.add('hiding'); setTimeout(r,60); });
+                    updateCardDOM(currentCardList[tempIndices[i]]);
+                    currentCardIndex = tempIndices[i];
+                    await new Promise(r=>{ cardContentEl.classList.remove('hiding'); setTimeout(r,70); });
+                    if(i<tempIndices.length-1) await new Promise(r=>setTimeout(r,intervals[i]));
+                }
+                await new Promise(r=>setTimeout(r,180));
+                await new Promise(r=>{ cardContentEl.classList.add('hiding'); setTimeout(r,60); });
+                updateCardDOM(currentCardList[finalIndex]);
+                currentCardIndex = finalIndex;
+                recordRecentIndex(finalIndex);
+                await new Promise(r=>{ cardContentEl.classList.remove('hiding'); setTimeout(r,80); });
+                cardEl.classList.add('glow');
+                setTimeout(()=>cardEl.classList.remove('glow'),700);
+                drawCount++;
+                counterNumEl.textContent = drawCount;
+                drawBtn.disabled = false;
+                btnTextEl.textContent = '随机抽取';
+                drawBtn.style.animationPlayState = 'running';
+                isAnimating = false;
+            }
+
+            function copyCardContent() {
+                if (!hasEntered) return;
+                const title = cardTitleEl.textContent;
+                const subtitle = cardSubtitleEl.textContent;
+                const text = `「${title}」\n${subtitle.replace(/\n/g, ' ')}`;
+                navigator.clipboard.writeText(text).then(()=>showCopyToast()).catch(()=>{
+                    const ta = document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); showCopyToast();
+                });
+            }
+            function showCopyToast(){ if(toastTimer)clearTimeout(toastTimer); copyToast.classList.add('show'); toastTimer=setTimeout(()=>copyToast.classList.remove('show'),1800); }
+
+            function initFromURL(){
+                const params = new URLSearchParams(window.location.search);
+                let bookParam = params.get('book');
+                if(bookParam && BOOKS[bookParam]) currentBookKey = bookParam;
+                else currentBookKey = Object.keys(BOOKS)[0];
+                currentCardList = BOOKS[currentBookKey].cards;
+                currentCardIndex = 0;
+                drawCount = 0;
+                recentIndices = [];
+                refreshCoverUI();
+                if(currentCardList.length) updateCardDOM(currentCardList[0]);
+            }
+
+            function closeModal() { suggestModal.classList.remove('show'); }
+            suggestModal.addEventListener('click', closeModal);
+            closeSuggestBtn.addEventListener('click', (e) => { e.stopPropagation(); closeModal(); });
+            const suggestCardEl = document.querySelector('.suggest-card');
+            if(suggestCardEl) suggestCardEl.addEventListener('click', (e) => e.stopPropagation());
+
+            if (bookSearchInput) {
+                bookSearchInput.addEventListener('input', () => {
+                    renderBookList();
+                });
+            }
+            window.addEventListener('resize', () => updateFadeVisibility());
+            const observer = new MutationObserver(() => updateFadeVisibility());
+            if (bookSelector) observer.observe(bookSelector, { childList: true, subtree: true, attributes: true });
+
+            introScreen.addEventListener('click', (e) => {
+                if(e.target.closest('.book-selector-item') || e.target.closest('.book-search-input')) return;
                 enterMainApp();
             });
-            mainApp.classList.remove('visible');
-            btnWrapper.classList.remove('active');
-            counterEl.classList.remove('active');
-            copyToast.classList.remove('show');
+            drawBtn.addEventListener('click', (e) => {
+                const rect = drawBtn.getBoundingClientRect();
+                const ripple = document.createElement('span'); ripple.classList.add('btn__ripple');
+                ripple.style.width = ripple.style.height = Math.max(rect.width,rect.height)+'px';
+                ripple.style.left = (e.clientX - rect.left - ripple.offsetWidth/2)+'px';
+                ripple.style.top = (e.clientY - rect.top - ripple.offsetHeight/2)+'px';
+                drawBtn.appendChild(ripple); ripple.addEventListener('animationend',()=>ripple.remove());
+                drawCard();
+            });
+            cardCopyArea.addEventListener('click', (e) => { e.stopPropagation(); copyCardContent(); });
+            if(titleGroupTrigger) {
+                titleGroupTrigger.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (hasEntered) exitToCover();
+                });
+            }
+            const qrContainer = document.getElementById('qrMiniContainer');
+            if(qrContainer) {
+                qrContainer.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    window.open(window.location.href, '_blank');
+                });
+            }
+
+            window.addEventListener('popstate', (e) => {
+                const params = new URLSearchParams(window.location.search);
+                let book = params.get('book');
+                if(book && BOOKS[book]) {
+                    currentBookKey = book;
+                    currentCardList = BOOKS[currentBookKey].cards;
+                    drawCount = 0; if(counterNumEl) counterNumEl.textContent = "0";
+                    recentIndices = [];
+                    refreshCoverUI();
+                    if(hasEntered) exitToCover();
+                } else if(!book) {
+                    currentBookKey = Object.keys(BOOKS)[0];
+                    currentCardList = BOOKS[currentBookKey].cards;
+                    refreshCoverUI();
+                    if(hasEntered) exitToCover();
+                }
+            });
+            initFromURL();
         })();
     </script>
 </body>
